@@ -19,6 +19,10 @@ const activityLogsSchema = new Schema(
       type: Object,
       default: null,
     },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     versionKey: false,

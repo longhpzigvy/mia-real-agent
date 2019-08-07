@@ -8,6 +8,7 @@ import AgentRouter from './agent/agent.route';
 import ConversationRouter from './conversation/conversation.route';
 import AdminRouter from './admin/routers';
 import ReplyRouter from './reply/reply.route';
+import ActivityLogsRouter from './activityLogs/activityLogs.route';
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ export default () => {
   router.use('/conversations', ConversationRouter.router);
   router.use('/admin', AdminRouter.router);
   router.use('/reply', ReplyRouter.router);
+  router.use('/activity_logs', ActivityLogsRouter.router);
   return router;
 };
