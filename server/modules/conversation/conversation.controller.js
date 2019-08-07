@@ -5,12 +5,14 @@ import APIError, { ERROR_MESSAGE } from '../../utils/APIError';
 import BaseController from '../base/base.controller';
 import ConversationService from './conversation.service';
 import ReplyService from '../reply/reply.service';
+import ActivitiesLogsService from '../activityLogs/activityLogs.service';
 
 class ConversationController extends BaseController {
   constructor() {
     super(ConversationService);
     this.getAll = this.getAll.bind(this);
     this.getReplyMessages = this.getReplyMessages.bind(this);
+    this.getActivities = this.getActivities.bind(this);
   }
 
   async getReplyMessages(req, res) {
@@ -19,6 +21,17 @@ class ConversationController extends BaseController {
       const replyMessages = await ReplyService.getByConversation(id);
 
       return res.status(httpStatus.OK).send(replyMessages);
+    } catch (error) {
+      return super.handleError(res, error);
+    }
+  }
+
+  async getActivities(req, res) {
+    try {
+      const { id } = req.params;
+      const activities = await ActivitiesLogsService.getByConversation(id);
+
+      return res.status(httpStatus.OK).send(activities);
     } catch (error) {
       return super.handleError(res, error);
     }

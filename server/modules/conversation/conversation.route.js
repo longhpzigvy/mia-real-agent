@@ -7,6 +7,7 @@ class ConversationRouter extends BaseRouter {
 
     this.router.get('/:id/replies', this.controller.getReplyMessages);
     this.router.post('/:id/rating', this.controller.rating);
+    this.router.get('/:id/activities', this.controller.getActivities);
   }
 }
 

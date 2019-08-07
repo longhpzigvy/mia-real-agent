@@ -36,11 +36,6 @@ export const closeTicket = id => axios
   .then(response => ({ response }))
   .catch(error => ({ error }));
 
-export const insertChat = (id, data) => axios
-  .post(`tickets/chat/${id}`, data)
-  .then(response => ({ response }))
-  .catch(error => ({ error }));
-
 export const adminGetAllTicket = params => axios
   .get('admin/tickets', { params })
   .then(response => ({ response }))
@@ -53,5 +48,10 @@ export const get = id => axios
 
 export const getActivity = () => axios
   .get('admin/tickets/dashboard/activity')
+  .then(response => ({ response }))
+  .catch(error => ({ error }));
+
+export const fetchTicketActivities = ticketId => axios
+  .get(`/tickets/${ticketId}/activities`)
   .then(response => ({ response }))
   .catch(error => ({ error }));

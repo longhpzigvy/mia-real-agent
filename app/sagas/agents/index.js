@@ -28,7 +28,7 @@ export function* findAvailableAgent({ payload }) {
   try {
     const { error } = yield call(findAgent, conversation.ticketId);
     if (error) {
-      throw new Error(error);
+      throw error;
     }
     notification.success({ message: 'Agent found' });
     yield put(findAgentRequestSuccess(conversationId));
@@ -48,7 +48,7 @@ export function* confirmRequest({ payload }) {
   try {
     const { error } = yield call(acceptAgent, conversationId, ticketId, isConfirm);
     if (error) {
-      throw new Error(error);
+      throw error;
     }
     yield put(agentConfirmSuccessAction());
     yield put(actions.getAllTicketAction());

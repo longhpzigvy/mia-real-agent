@@ -123,11 +123,7 @@ function* getTicket({ payload }) {
   const { ticketId } = payload;
   try {
     const { response, error } = yield call(TicketApi.getTicket, ticketId);
-    if (error) {
-      throw new Error(_get(
-        error, 'response.data.message', error.message
-      ));
-    }
+    if (error) throw error;
     const { data } = response;
     const { _doc } = data;
     yield put(actions.getCompleteAction(_doc));
@@ -188,9 +184,7 @@ function* ticketFetchSingle({ id }) {
   try {
     const { response, error } = yield call(TicketApi.get, id);
     const data = _get(response, 'data', {});
-    if (error) {
-      throw new Error(error);
-    }
+    if (error) throw error;
     yield put(actions.fetchTicketSingleSuccess(data));
   } catch (error) {
     const errMsg = error.message || error;

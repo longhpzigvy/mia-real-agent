@@ -34,3 +34,8 @@ export const submitRating = (id, rating) => axios
   .post(`conversations/${id}/rating`, rating)
   .then(response => ({ response }))
   .catch(error => ({ error }));
+
+export const fetchConversationctivities = ticketId => axios
+  .get(`/conversations/${ticketId}/activities`)
+  .then(response => ({ response }))
+  .catch(error => ({ error }));

@@ -26,7 +26,7 @@ function* fetchConversationMessages({ payload }) {
   if (!conversationId) return;
   try {
     const { response, error } = yield call(getConversationMessage, conversationId);
-    if (error) throw new Error(error);
+    if (error) throw error;
     const data = _get(response, 'data', {});
 
     yield put(fetchReplyMessagesSuccess(conversationId, data));
@@ -52,7 +52,7 @@ function* fetchConversation({ payload }) {
   const { conversationId } = payload;
   try {
     const { response, error } = yield call(getConversation, conversationId);
-    if (error) throw new Error(error);
+    if (error) throw error;
     const data = _get(response, 'data', {});
 
     yield put(actions.fetchConversationSuccess(data));
@@ -80,7 +80,7 @@ function* submitConversationRating({ payload }) {
   const { conversationId, rating } = payload;
   try {
     const { response, error } = yield call(submitRating, conversationId, rating);
-    if (error) throw new Error(error);
+    if (error) throw error;
     const data = _get(response, 'data', {});
     notification.success({ message: 'Rating submitted' });
     yield put(actions.submitConversationRatingSuccess(data));

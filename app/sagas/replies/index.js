@@ -25,7 +25,7 @@ function* sendReplyMessage({ payload }) {
   // from, to, conversation, message
   try {
     const { response, error } = yield call(sendReplyMessageAPI, userId, to, conversationId, messages);
-    if (error) throw new Error(error);
+    if (error) throw error;
     const { reply } = get(response, 'data', {});
 
     yield put(sendReplyMessageSuccess(conversationId, reply, localMessageId));

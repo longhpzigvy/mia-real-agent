@@ -5,6 +5,8 @@ import BaseController from '../base/base.controller';
 import TicketService from './ticket.service';
 import UserService from '../user/user.service';
 import ConversationService from '../conversation/conversation.service';
+import ActivitiesLogsService from '../activityLogs/activityLogs.service';
+
 import APIError, { ERROR_MESSAGE } from '../../utils/APIError';
 import AgentQueue from '../queue/agentQueue';
 import { getSocketByUser } from '../../socketio';
@@ -21,9 +23,20 @@ class TicketController extends BaseController {
     this.load = this.load.bind(this);
     this.insert = this.insert.bind(this);
     this.getAll = this.getAll.bind(this);
+    this.getActivities = this.getActivities.bind(this);
     this.getAllConversations = this.getAllConversations.bind(this);
   }
 
+  async getActivities(req, res) {
+    try {
+      const { id } = req.params;
+      const activities = await ActivitiesLogsService.getByTicket(id);
+
+      return res.status(httpStatus.OK).send(activities);
+    } catch (error) {
+      return super.handleError(res, error);
+    }
+  }
 
   async findAvailableAgents(req, res) {
     try {
