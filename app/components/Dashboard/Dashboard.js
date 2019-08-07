@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import { shape } from 'prop-types';
 import ShadowScrollbars from 'components/Scrollbar';
-import Activity from 'components/ActivityTab';
+import Activity from 'containers/ActivityTab';
 import TicketTab from 'containers/TicketTab';
 import {
   DashboardContainer,

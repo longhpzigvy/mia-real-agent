@@ -2,6 +2,8 @@
 import {
   fromJS, List,
 } from 'immutable';
+import moment from 'moment';
+import { getCurrentTicket, getTicketById } from '../../selectors/ticket';
 
 export const ACTIVITIES_FETCH = 'activities/ACTIVITIES_FETCH';
 export const ACTIVITIES_FETCH_SUCCESS = 'activities/ACTIVITIES_FETCH_SUCCESS';
@@ -117,6 +119,24 @@ export const addNewConversationActivity = (conversationId, activity) => ({
 
 
 // selector
+
+export const getMainActivities = ({ activities }) => activities.get('mainActivityList').toJS();
+export const getConversationActivities = ({ activities }, conversationId) => (activities.getIn(['conversationActivityList', conversationId]) || fromJS([])).toJS();
+export const getTicketActivities = ({ activities }, ticketId) => (activities.get(['ticketActivityList', ticketId]) || fromJS([])).toJS();
+export const getCurrentActivities = (state) => {
+  const ticketId = getCurrentTicket(state);
+  const ticket = getTicketById(state, ticketId);
+  const { conversationId } = ticket;
+
+  const conversationActivites = getConversationActivities(state, conversationId);
+  const ticketActivites = getTicketActivities(state, ticketId);
+
+  const activityList = conversationActivites.concat(ticketActivites);
+
+  return activityList.sort((a, b) => moment(a.createdAt).diff(moment(b.createdAt)));
+};
+
+// reducer
 
 const initialState = fromJS({
   mainActivityList: [],

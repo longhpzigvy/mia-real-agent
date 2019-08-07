@@ -261,6 +261,7 @@ function ticketReducer(state = initialState, action) {
         .setIn(['tickets', _id], fromJS(payload))
         .set('visibleTicketIds', fromJS(newVisibleTicketIds));
     }
+
     case TICKET_CREATE_FAIL:
       return state.set('isCreating', false)
         .set('createError', action.errorMessage);
@@ -268,12 +269,14 @@ function ticketReducer(state = initialState, action) {
     case TICKET_GET_DETAIL:
       return state.set('isGetting', true)
         .set('getError', '');
+
     case TICKET_GET_DETAIL_SUCCESS: {
       const { ticket } = action.payload;
       const { _id } = ticket;
       return state.set('isGetting', false)
         .setIn(['tickets', _id], fromJS(ticket));
     }
+
     case TICKET_GET_DETAIL_FAIL:
       return state.set('isGetting', false)
         .set('getError', action.payload.errorMessage);
