@@ -41,7 +41,7 @@ const ActivityTab = ({ activityList }) => (
                   <DashboardDesc>#267 </DashboardDesc>
                 </DashboardSubTitle>
                 <DashboardSubDesc>
-                  {activity}
+                  {JSON.stringify(activity)}
                 </DashboardSubDesc>
               </DashboardRightBlock>
             </DashboardContent>

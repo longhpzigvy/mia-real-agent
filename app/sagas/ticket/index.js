@@ -24,6 +24,10 @@ import {
 import {
   AUTH_LOGIN_SUCCESS,
 } from '../../reducers/auth';
+import {
+  getTicketActivities,
+  fetchTicketActivities,
+} from '../../reducers/activities';
 import * as TicketApi from '../../api/ticket';
 
 function* queryTickets(action) {
@@ -196,6 +200,9 @@ function* ticketFetchSingle({ id }) {
 function* setCurrentTicket({ payload }) {
   const { ticketId } = payload;
   const ticket = yield select(getTicketById, ticketId);
+  const ticketActivities = yield select(getTicketActivities, ticketId);
+
+  if (!ticketActivities || !ticketActivities.length) yield put(fetchTicketActivities(ticketId));
   if (_isEmpty(ticket)) {
     yield put(actions.getAction(ticketId));
   }

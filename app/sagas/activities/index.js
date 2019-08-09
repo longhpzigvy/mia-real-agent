@@ -1,6 +1,6 @@
 import {
   call, put, takeLeading,
-  take, all,
+  take, all, select,
 } from 'redux-saga/effects';
 // lodash
 import _get from 'lodash/get';
@@ -9,6 +9,8 @@ import {
   ACTIVITIES_CONVERSATION_FETCH,
   ACTIVITIES_TICKET_FETCH,
   ACTIVITIES_FETCH,
+  getTicketActivities,
+  getConversationActivities,
   actions,
 } from '../../reducers/activities';
 import {
@@ -54,6 +56,11 @@ function* fetchTicketActivitiesSaga({ payload }) {
   }
 }
 
+/**
+ *
+ * @param {Object} redux action
+ * Fetch all activity with conversationId of a current user
+ */
 function* fetchConversationActivitiesSaga({ payload }) {
   const { conversationId } = payload;
   try {

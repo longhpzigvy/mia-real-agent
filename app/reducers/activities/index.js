@@ -192,13 +192,7 @@ function reducer(state = initialState, action) {
       let activityList = state
         .getIn(['ticketActivityList', ticketId]);
 
-      // with the first success, activity list will not be available
-      // hence we should create new list
-      if (!activityList) {
-        activityList = new List(activities);
-      } else {
-        activityList = activityList.push(...activities);
-      }
+      activityList = new List(activities);
 
       return state
         .setIn(['isFetching', ticketId], false)
@@ -213,13 +207,7 @@ function reducer(state = initialState, action) {
       let activityList = state
         .getIn(['conversationActivityList', conversationId]);
 
-      // with the first success, activity list will not be available
-      // hence we should create new list
-      if (!activityList) {
-        activityList = new List(activities);
-      } else {
-        activityList = activityList.push(...activities);
-      }
+      activityList = new List(activities);
 
       return state
         .setIn(['isFetching', conversationId], false)

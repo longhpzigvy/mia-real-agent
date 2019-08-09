@@ -20,6 +20,10 @@ import {
   getReplyMessagesByConversationId,
   fetchReplyMessages,
 } from '../../reducers/replies';
+import {
+  getConversationActivities,
+  fetchConversationActivities,
+} from '../../reducers/activities';
 
 function* fetchConversationMessages({ payload }) {
   const { conversationId } = payload;
@@ -40,9 +44,16 @@ function* setCurrentConversation({ payload }) {
   const { conversationId } = payload;
   const conversation = yield select(getConverationById, conversationId);
   const replies = yield select(getReplyMessagesByConversationId, conversationId);
+  const convActivities = yield select(getConversationActivities, conversationId);
+
+  if (!convActivities || !convActivities.length) {
+    yield put(fetchConversationActivities(conversationId));
+  }
+
   if (_isEmpty(conversation)) {
     yield put(fetchConversationAction(conversationId));
   }
+
   if (_isEmpty(replies)) {
     yield put(fetchReplyMessages(conversationId));
   }

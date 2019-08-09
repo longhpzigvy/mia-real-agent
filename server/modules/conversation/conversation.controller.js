@@ -1,11 +1,12 @@
 import httpStatus from 'http-status';
-import _ from 'lodash';
+import _assign from 'lodash/assign';
 import _get from 'lodash/get';
 import APIError, { ERROR_MESSAGE } from '../../utils/APIError';
 import BaseController from '../base/base.controller';
 import ConversationService from './conversation.service';
 import ReplyService from '../reply/reply.service';
 import ActivitiesLogsService from '../activityLogs/activityLogs.service';
+import { CONVERSATION_EVENT } from '../../../common/activityLogsEnums';
 
 class ConversationController extends BaseController {
   constructor() {
@@ -81,9 +82,21 @@ class ConversationController extends BaseController {
       const { model, body } = req;
       const { score, comment } = body;
 
-      _.assign(model, { rating: { score, comment } });
+      _assign(model, { rating: { score, comment } });
+
+      const { _id: conversationId } = model;
 
       const savedModel = await model.save();
+      // async call, no need to wait OvOb
+      ActivitiesLogsService.insert({
+        createdBy: model.owner,
+        action: CONVERSATION_EVENT.CONVERSATION_RATED,
+        payload: {
+          conversationId,
+          score,
+          comment,
+        },
+      });
       return res.status(httpStatus.OK).send(savedModel);
     } catch (error) {
       return super.handleError(res, error);

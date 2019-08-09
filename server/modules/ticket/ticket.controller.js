@@ -1,5 +1,5 @@
 import httpStatus from 'http-status';
-import _ from 'lodash';
+import _assign from 'lodash/assign';
 import _get from 'lodash/get';
 import BaseController from '../base/base.controller';
 import TicketService from './ticket.service';
@@ -12,6 +12,7 @@ import AgentQueue from '../queue/agentQueue';
 import { getSocketByUser } from '../../socketio';
 import { isAgent } from '../../../app/utils/func-utils';
 import { TICKET_STATUS } from '../../../common/enums';
+import { TICKET_EVENT, CONVERSATION_EVENT } from '../../../common/activityLogsEnums';
 
 const { CONTENT_NOT_FOUND } = ERROR_MESSAGE;
 const emptyObjString = '{}';
@@ -70,8 +71,8 @@ class TicketController extends BaseController {
         return res.status(httpStatus.NOT_FOUND).send('Agent not found!');
       }
 
-      _.assign(ticket, { status: TICKET_STATUS.PENDING });
-      ticket.save({});
+      _assign(ticket, { status: TICKET_STATUS.PENDING });
+      await ticket.save({});
       return res.status(httpStatus.OK).send();
     } catch (error) {
       return super.handleError(res, error);
@@ -161,7 +162,20 @@ class TicketController extends BaseController {
       };
 
       const result = await this.service.insert(newData);
-      const { _id: ticketId } = result;
+      const { _id: ticketId, title } = result;
+      // async call, no need to wait OvOb
+      ActivitiesLogsService.insert({
+        createdBy: owner,
+        action: TICKET_EVENT.TICKET_CREATED,
+        payload: {
+          ticketId,
+          title,
+        },
+      });
+      // assign conversationId to ticketId, so that we don't have to find conversation from ticketId
+      // it's not a very good design but it will reduce the db query
+      // and by the way, this is not SQL so yeah
+      // we can do what ever we want \OwO/
       try {
         // create a conversation with mia by default
         const conversation = await ConversationService.insert({
@@ -169,14 +183,22 @@ class TicketController extends BaseController {
           members: [],
           ticketId,
         });
-        // eslint-disable-next-line no-underscore-dangle
-        result.conversationId = conversation._id;
+        const { _id: conversationId } = conversation;
+        result.conversationId = conversationId;
+
         await result.save();
+        // async call, no need to wait OvOb
+        ActivitiesLogsService.insert({
+          createdBy: owner,
+          action: CONVERSATION_EVENT.CONVERSATION_CREATED,
+          payload: {
+            conversationId,
+          },
+        });
       } catch (error) {
         this.service.delete(ticketId);
         throw new APIError('Unable to create ticket', httpStatus.INTERNAL_SERVER_ERROR);
       }
-
       return res.status(httpStatus.OK).send(result);
     } catch (error) {
       return this.handleError(res, error);
@@ -226,12 +248,26 @@ class TicketController extends BaseController {
 
   async closeTicket(req, res) {
     try {
-      const { model: ticket } = req;
+      const { model: ticket, user } = req;
+      const { _id: owner } = user;
+
       if (!ticket) {
         throw new APIError(CONTENT_NOT_FOUND, httpStatus.NOT_FOUND);
       }
-      _.assign(ticket, { status: TICKET_STATUS.CLOSED });
+
+      const { _id: ticketId, title } = ticket;
+
+      _assign(ticket, { status: TICKET_STATUS.CLOSED });
       const result = await ticket.save({});
+      // async call, no need to wait OvOb
+      ActivitiesLogsService.insert({
+        createdBy: owner,
+        action: TICKET_EVENT.TICKET_CLOSED,
+        payload: {
+          ticketId,
+          title,
+        },
+      });
       return res.status(httpStatus.OK).send(result);
     } catch (error) {
       return this.handleError(res, error);
