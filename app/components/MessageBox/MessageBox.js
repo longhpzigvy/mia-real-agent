@@ -127,24 +127,28 @@ export default class MessageBox extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    this.scrollChatToBottom();
     const {
-      conversationId,
+      conversationId, replyMessages,
       currentConversation, setCurrentTicket, joinConversation, leftConversation,
     } = this.props;
     const { conversationId: prevConversationId } = prevProps;
-    if (conversationId !== prevConversationId) {
-      joinConversation(conversationId);
-      if (prevConversationId) {
-        leftConversation(prevConversationId);
-      }
-    }
     if (!_isEmpty(currentConversation)) {
       const { ticketId: prevTicketId } = prevProps.currentConversation;
       const { ticketId } = currentConversation;
       if (ticketId !== prevTicketId) {
         setCurrentTicket(ticketId);
+        return;
       }
+    }
+    if (conversationId !== prevConversationId) {
+      joinConversation(conversationId);
+      if (prevConversationId) {
+        leftConversation(prevConversationId);
+      }
+      return;
+    }
+    if (prevProps.replyMessages.length !== replyMessages.length) {
+      this.scrollChatToBottom();
     }
   }
 

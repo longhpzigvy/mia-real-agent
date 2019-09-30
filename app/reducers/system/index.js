@@ -64,7 +64,7 @@ export const getSystemUpdateError = ({ system }) => system.get('updateError');
 
 const initialState = fromJS({
   isLoading: true,
-  lng: 'en',
+  lng: localStorage.getItem('i18nextLng') || 'en',
   system: {},
 
   isUpdating: false,
