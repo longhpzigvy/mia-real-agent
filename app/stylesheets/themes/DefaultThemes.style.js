@@ -71,6 +71,7 @@ export const DefaultThemes = {
     iconMoreColor: '#227fb5',
     iconMoreHoverColor: '#0f496b',
     ColorXLightGrey: '#2f2f2f',
+    ColorXDarkGrey: '#4a4a4a',
     ColorXXLightGrey: '#6e6c83fa',
     ColorXXXLightGrey: '#eee',
     ColorUserLabel: '#9a9a9a',

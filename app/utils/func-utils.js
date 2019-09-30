@@ -65,6 +65,10 @@ export function isAgent(role) {
   return role === ROLES.FREELANCER || role === ROLES.DEDICATED;
 }
 
+export function isUser(role) {
+  return role === ROLES.BUSINESS || role === ROLES.INDIVIDUAL;
+}
+
 export function shouldShowSystemMessage(systemMessage, currentConversationId) {
   if (_isEmpty(systemMessage)) {
     return false;
@@ -77,7 +81,7 @@ export function shouldShowSystemMessage(systemMessage, currentConversationId) {
 }
 
 export const toI18n = key => (
-  <Trans i18nKey={key} />
+  <Trans i18nKey={key} defaults={`[${key}]`} />
 );
 
 const sortTicketHistory = history => (history || [])

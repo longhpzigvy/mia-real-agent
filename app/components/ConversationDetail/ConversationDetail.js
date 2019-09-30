@@ -3,7 +3,7 @@ import ShadowScrollbars from 'components/Scrollbar';
 import _isEmpty from 'lodash/isEmpty';
 import { Descriptions } from 'antd';
 
-import { shape } from 'prop-types';
+import { shape, string } from 'prop-types';
 import {
   ConversationDetailWrapper,
   ConversationInfoWrapper,
@@ -14,7 +14,7 @@ import {
 } from './styles';
 import { ROLES } from '../../../common/enums';
 import TimerWrapper from './Timer';
-import { toI18n } from '../../utils/func-utils';
+import { toI18n, isAgent } from '../../utils/func-utils';
 
 const scrollStyle = {
   height: 'calc(100vh - 9em)',
@@ -24,6 +24,7 @@ const scrollStyle = {
 export default class ConversationDetail extends Component {
   static propTypes = {
     ticket: shape(),
+    userRole: string,
   }
 
   renderOwnerInfo = () => {
@@ -62,7 +63,7 @@ export default class ConversationDetail extends Component {
   }
 
   renderConversationInfo = () => {
-    const { ticket } = this.props;
+    const { ticket, userRole } = this.props;
     if (!ticket) {
       return (
         <ConversationInfoWrapper>
@@ -86,7 +87,7 @@ export default class ConversationDetail extends Component {
           <Descriptions.Item label={toI18n('CONV_MESSAGE_BOX_DETAIL_TICKET')}>{title}</Descriptions.Item>
           <Descriptions.Item label={toI18n('CONV_MESSAGE_BOX_DETAIL_DESCRIPTION')}>{description}</Descriptions.Item>
           <Descriptions.Item label={toI18n('CONV_MESSAGE_BOX_DETAIL_OWNER')}>{this.renderOwnerInfo()}</Descriptions.Item>
-          {!_isEmpty(assignee) ? (<Descriptions.Item label={toI18n('CONV_MESSAGE_BOX_DETAIL_ASSIGNEE')}>{this.renderAssigneeInfo()}</Descriptions.Item>) : <div />}
+          {!_isEmpty(assignee) && !isAgent(userRole) ? (<Descriptions.Item label={toI18n('CONV_MESSAGE_BOX_DETAIL_ASSIGNEE')}>{this.renderAssigneeInfo()}</Descriptions.Item>) : <div />}
         </Descriptions>
       </ConversationInfoWrapper>
     );

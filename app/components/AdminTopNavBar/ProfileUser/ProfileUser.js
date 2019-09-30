@@ -16,8 +16,7 @@ import {
   LanguageRadio,
   LanguageRadioWrapper,
 } from './ProfileUser.styled';
-import { toI18n } from '../../../utils/func-utils';
-import { ROLES } from '../../../../common/enums';
+import { toI18n, isUser } from '../../../utils/func-utils';
 import { LNG_CODE } from '../../../utils/constants';
 
 class ProfileUser extends React.PureComponent {
@@ -70,7 +69,7 @@ class ProfileUser extends React.PureComponent {
         <ProfileUserHead>
           <ProfileUserAction>
             {this.renderSelectLanguage()}
-            {role !== ROLES.ADMIN && this.renderAdditionalInformation()}
+            {isUser(role) && this.renderAdditionalInformation()}
             <Link to="/profile" className="my-account">{toI18n('DB_PROFILE_MY_ACCOUNT')}</Link>
             <button className="sign-out" onClick={onLogout}>
               {toI18n('DB_PROFILE_SIGN_OUT')}
