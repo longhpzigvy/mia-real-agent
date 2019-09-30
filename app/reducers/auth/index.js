@@ -265,6 +265,7 @@ export const getAuthenticatedData = createSelector(
   selectAuthenticationReducer,
   (authState) => {
     const email = authState.get('email');
+    const username = authState.get('username');
     const role = authState.get('role');
     const token = authState.get('token');
     const userId = authState.get('userId');
@@ -272,6 +273,7 @@ export const getAuthenticatedData = createSelector(
 
     return {
       email,
+      username,
       role,
       token,
       userId,

@@ -240,11 +240,21 @@ function repliesReducer(state = initialState, action) {
     }
 
     case REPLIES_SEND_MESSAGE_SUCCESS: {
-      const { localMessageId, conversationId } = action.payload;
-      const allIds = state.get('allIds').add(conversationId);
+      const { localMessageId, conversationId, messages: reply } = action.payload;
       const sendingList = state.getIn(['sendingMessage', conversationId]).delete(localMessageId);
+      const { _id: msgId, messages } = reply;
+      let currentReplies = state.getIn(['byId', conversationId]);
+      const allIds = state.get('allIds').add(conversationId);
+      if (!currentReplies) {
+        currentReplies = new OrderedMap({
+          [msgId]: messages,
+        });
+      } else {
+        currentReplies = currentReplies.set(msgId, reply);
+      }
       return state
         .set('allIds', allIds)
+        .setIn(['byId', conversationId], currentReplies)
         .setIn(['sendingMessage', conversationId], sendingList);
     }
 

@@ -50,7 +50,6 @@ import RichEditor from '../FormInput/RichEditor/RichEditor';
 import { clearEditorContent } from '../../api/utils';
 import { ButtonPrimary, ButtonDefault } from '../../stylesheets/Button.style';
 import CreateFeedbackForm from '../../containers/CreateFeedbackForm';
-import TicketPayment from '../../containers/TicketPayment';
 import CloseTicketModal from './CloseTicketModal';
 
 const scrollStyle = {
@@ -269,8 +268,11 @@ export default class MessageBox extends Component {
   }
 
   handleTyping = (content) => {
-    const { userTyping, conversationId, userRole } = this.props;
-    if (!isAgent(userRole)) {
+    const {
+      userTyping, conversationId, userRole, currentTicket,
+    } = this.props;
+    const { assignee } = currentTicket;
+    if (!isAgent(userRole) && assignee) {
       const textValue = content.getCurrentContent().getPlainText();
       userTyping(conversationId, textValue);
     }
@@ -493,7 +495,7 @@ export default class MessageBox extends Component {
   render() {
     const { feedbackFormIsOpen, closeTicketModalIsOpen, isOpenCreateModal } = this.state;
     const {
-      isFetchingReplies, isFindingAgent, currentTicket,
+      isFetchingReplies, isFindingAgent, currentTicket, userRole,
     } = this.props;
     const { _id } = currentTicket || {};
     return (
@@ -503,14 +505,13 @@ export default class MessageBox extends Component {
           <MessageBoxContent>
             {this.renderMessageBoxContent()}
           </MessageBoxContent>
-          <ConversationDetail ticket={currentTicket} />
+          <ConversationDetail ticket={currentTicket} userRole={userRole} />
           <CreateFeedbackForm
             ticketId={_id}
             isOpen={feedbackFormIsOpen}
             handleCancel={() => this.toggleFeedbackForm(false)}
           />
         </MessageBoxWrapper>
-        <TicketPayment />
         <CloseTicketModal
           handleSubmitCloseTicket={this.handleCloseTicket}
           handleCloseModal={() => this.handleToggleCloseModal(false)}

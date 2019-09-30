@@ -14,7 +14,7 @@ import {
 } from '../../reducers/replies';
 import { actions as TICKET_ACTIONS } from '../../reducers/ticket';
 import { getConverationById } from '../../reducers/conversations';
-import { getUserId } from '../../reducers/auth';
+import { getUserId, getAuthenticatedData } from '../../reducers/auth';
 import * as ReplyMessageAPI from '../../api/reply';
 import { validateMessage } from './utils';
 
@@ -36,8 +36,15 @@ function* sendReplyMessage({ payload }) {
     const { response, error } = yield call(ReplyMessageAPI.sendReplyMessage, userId, to, conversationId, messages);
     if (error) throw new Error(error);
     const { reply } = get(response, 'data', {});
-
-    yield put(sendReplyMessageSuccess(conversationId, reply, localMessageId));
+    const { username, role } = yield select(getAuthenticatedData);
+    yield put(sendReplyMessageSuccess(conversationId, {
+      ...reply,
+      from: {
+        _id: userId,
+        username,
+        role,
+      },
+    }, localMessageId));
     yield put(TICKET_ACTIONS.getAction(ticketId));
   } catch (error) {
     console.log('[REPLY SAGA] ERROR: ', error.message || error);
