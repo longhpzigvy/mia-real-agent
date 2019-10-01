@@ -35,7 +35,7 @@ const TABS_MENU = [
     key: 'tickets-warning',
     type: 'container',
     label: toI18n('ADMIN_LEFT_NAV_TICKETS_WARNING'),
-    icon: 'mia-tickets',
+    icon: 'mia-ticket',
     link: '/admin/tickets-warning',
   },
   {
