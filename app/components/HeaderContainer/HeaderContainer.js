@@ -51,14 +51,17 @@ class HeaderContainer extends PureComponent {
   renderHeaderAction = () => {
     const {
       url = '',
+      onClickAddButton,
     } = this.props;
     return (
       <HeaderActionWrapper>
-        {/* <ButtonPrimary data-tip="Create Ticket">
-          <i className="mia-add" />
-          <span>Add New</span>
-        </ButtonPrimary>
-        <ButtonPrimary data-tip="Export Excel">
+        {onClickAddButton && (
+          <ButtonPrimary data-tip="Create Ticket" onClick={onClickAddButton}>
+            <i className="mia-add" />
+            <span>Add New</span>
+          </ButtonPrimary>
+        )}
+        {/* <ButtonPrimary data-tip="Export Excel">
           <i className="mia-hr-export" />
           <span>Export Excel</span>
         </ButtonPrimary> */}
@@ -83,6 +86,7 @@ HeaderContainer.propTypes = {
     PropTypes.shape(),
   ]),
   openModal: PropTypes.func,
+  onClickAddButton: PropTypes.func,
 };
 
 export default HeaderContainer;

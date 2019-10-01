@@ -24,6 +24,7 @@ const ItemManagementHoc = (ItemsManagementTable) => {
         errorMsg,
         newButtonType,
         onClickAddButton,
+        onClickRow,
         noHeader = false,
         ...propsTables
       } = this.props;
@@ -56,7 +57,7 @@ const ItemManagementHoc = (ItemsManagementTable) => {
               shouldRenderFilter={shouldRenderFilter}
             />
           )}
-          <ItemsManagementTable />
+          <ItemsManagementTable onClickRow={onClickRow} />
         </ItemDetailListWrapper>
       );
     }
@@ -77,6 +78,7 @@ const ItemManagementHoc = (ItemsManagementTable) => {
     filterItems: PropTypes.array,
     handleFilter: PropTypes.func,
     onClickAddButton: PropTypes.func,
+    onClickRow: PropTypes.func,
     currentFiltering: PropTypes.object,
     shouldRenderFilter: PropTypes.bool,
     errorMsg: PropTypes.string,

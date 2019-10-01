@@ -44,6 +44,7 @@ const ItemDetailListHoc = (ItemsDetailListItem) => {
         handleFilter,
         currentFiltering,
         shouldRenderFilter,
+        onClickAddButton,
       } = this.props;
 
       const size = items.length;
@@ -51,6 +52,7 @@ const ItemDetailListHoc = (ItemsDetailListItem) => {
       return (
         <ItemDetailListWrapper>
           <HeaderContainer
+            onClickAddButton={onClickAddButton}
             sortItem={sortItems}
             url={createEndpoint}
             handleSort={handleSort}
@@ -100,6 +102,7 @@ const ItemDetailListHoc = (ItemsDetailListItem) => {
     handleFilter: PropTypes.func,
     currentFiltering: PropTypes.object,
     shouldRenderFilter: PropTypes.bool,
+    onClickAddButton: PropTypes.func,
   };
 
   return ItemDetailList;
