@@ -52,6 +52,7 @@ export const DefaultThemes = {
     ColorRatingStar: '#ffd400',
     ColorBgUser: '#ff5502',
     ColorPrimary: '#ff5402',
+    ColorPrimaryHover: '#ff2700',
     ColorSecond: '#586069',
     ColorLabel: '#586069',
     ColorGrey: '#dfdfdf',

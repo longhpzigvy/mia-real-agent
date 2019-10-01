@@ -42,7 +42,6 @@ import FormInput from '../FormInput/FormInput';
 import {
   shouldShowSystemMessage, isAgent, toI18n, combineChat,
 } from '../../utils/func-utils';
-import { ProfileImageStyled } from '../TopNavBar/TopNavBar.styled';
 import {
   userChat, otherChat, otherTyping, botChat, ticketStatus, userAction, ticketRating,
 } from '../ChatItem';
@@ -51,6 +50,7 @@ import { clearEditorContent } from '../../api/utils';
 import { ButtonPrimary, ButtonDefault } from '../../stylesheets/Button.style';
 import CreateFeedbackForm from '../../containers/CreateFeedbackForm';
 import CloseTicketModal from './CloseTicketModal';
+import { ProfileImageStyled } from '../ChatItem/styles';
 
 const scrollStyle = {
   flex: 'auto',
@@ -159,7 +159,6 @@ export default class MessageBox extends Component {
           <MessageBoxItem left key="solution">
             <ProfileImageStyled
               src="/assets/images/mia-avatar.jpg"
-              onClick={this.onToggleUserInfo}
             />
             <FindAgentWrapper>
               <p key="solution">

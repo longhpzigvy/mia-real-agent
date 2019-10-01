@@ -15,6 +15,11 @@ const billingSchema = new Schema(
         BILLING_TYPE.TICKET_CHARGE,
       ],
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     content: {
       type: Object,
     },

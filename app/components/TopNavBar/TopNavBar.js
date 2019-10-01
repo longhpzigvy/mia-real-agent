@@ -69,9 +69,6 @@ export default class TopNavBar extends Component {
               <Translation>{t => t('DB_DASHBOARD')}</Translation>
             </Link>
           </MenuItem>
-          <MenuItem>
-            <Link to="/conversation">Ticket</Link>
-          </MenuItem>
         </MenuTopNavBar>
         <TopbarRight>
           <ProfileStyled>

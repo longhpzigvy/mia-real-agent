@@ -244,6 +244,7 @@ class TicketService extends BaseService {
       }
       // Save charge history
       await BillingService.ticketChargeBilling(
+        userId,
         {
           userCreditTime,
           ticketId: _id,

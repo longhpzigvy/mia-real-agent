@@ -19,11 +19,10 @@ import {
   BILLING_FETCH_SINGLE,
 } from '../../reducers/billing';
 import {
-  AUTH_LOGIN_SUCCESS,
+  AUTH_LOGIN_SUCCESS, getUserId,
 } from '../../reducers/auth';
 import * as BillingApi from '../../api/billing';
 import { USER_TOP_UP_SUCCESS } from '../../reducers/profile';
-import { TICKET_CLOSE_SUCCESS } from '../../reducers/ticket';
 
 function* queryBillings(action) {
   const billingPayload = {};
@@ -55,7 +54,7 @@ function* getAllBilling({ payload }) {
   const selectedPage = yield select(getSelectedPage);
   const sizePerPage = yield select(getSizePerPage);
   const sorting = yield select(reselectSorting);
-
+  const userId = yield select(getUserId);
   const { skip, limit } = getSkipLimit(selectedPage, sizePerPage);
   const { field, order } = sorting;
   const sort = { [field]: order };
@@ -69,6 +68,7 @@ function* getAllBilling({ payload }) {
     sort,
     skip,
     limit,
+    query: { userId },
     ...actionParam,
   };
 
@@ -106,7 +106,7 @@ function* billingFlow() {
   yield take(AUTH_LOGIN_SUCCESS);
   yield all([
     takeLatest([BILLING_CHANGE_PAGE, BILLING_SORTING], queryBillings),
-    takeLatest([BILLING_GET_ALL, USER_TOP_UP_SUCCESS, TICKET_CLOSE_SUCCESS], getAllBilling),
+    takeLatest([BILLING_GET_ALL, USER_TOP_UP_SUCCESS], getAllBilling),
     takeLatest(BILLING_FETCH_SINGLE, billingFetchSingle),
   ]);
 }

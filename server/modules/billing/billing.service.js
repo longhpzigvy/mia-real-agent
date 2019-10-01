@@ -10,17 +10,19 @@ class BillingService extends BaseService {
     this.ticketChargeBilling = this.ticketChargeBilling.bind(this);
   }
 
-  async ticketChargeBilling(content, total) {
+  async ticketChargeBilling(userId, content, total) {
     await BillingCollection.create({
       type: BILLING_TYPE.TICKET_CHARGE,
+      userId,
       content,
       total,
     });
   }
 
-  async topUpBilling(content, total) {
+  async topUpBilling(userId, content, total) {
     await BillingCollection.create({
       type: BILLING_TYPE.TOPUP,
+      userId,
       content,
       total,
     });
