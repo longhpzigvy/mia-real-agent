@@ -17,6 +17,7 @@ import {
 import ProfileUser from '../../containers/ProfileUser';
 import { PopupOverlayStyled } from '../Generals/General.styled';
 import { isAgent } from '../../utils/func-utils';
+import ChangeLanguage from '../../containers/ChangeLanguage/ChangeLanguage';
 
 export default class TopNavBar extends Component {
   static propTypes = {
@@ -71,6 +72,7 @@ export default class TopNavBar extends Component {
           </MenuItem>
         </MenuTopNavBar>
         <TopbarRight>
+          <ChangeLanguage />
           <ProfileStyled>
             <ProfileImageStyled
               src={avatar || '/assets/images/user.svg'}

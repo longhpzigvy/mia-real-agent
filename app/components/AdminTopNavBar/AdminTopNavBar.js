@@ -7,7 +7,6 @@ import {
   ProfileStyled,
   ProfileImageStyled,
   UserNameAdmin,
-  ActionsStyled,
   SettingIcon,
 } from './AdminTopNavBar.styled';
 import ProfileUser from '../../containers/ProfileUser';

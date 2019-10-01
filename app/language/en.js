@@ -379,8 +379,8 @@ const en = {
     // Navbar profile
     NAVBAR_PROFILE_CREDIT_TIME: 'Credit time',
     NAVBAR_PROFILE_LANGUAGE: 'Language',
-    NAVBAR_PROFILE_EN: 'EN',
-    NAVBAR_PROFILE_VN: 'VN',
+    NAVBAR_PROFILE_EN: 'English',
+    NAVBAR_PROFILE_VN: 'Vietnamese',
     // Close Ticket Modal
     CLOSE_TICKET_MODAL_CLOSED_STATUS: 'Closed Status',
     CLOSE_TICKET_MODAL_UNSOLVED_REASON: 'Unsolved Reason',

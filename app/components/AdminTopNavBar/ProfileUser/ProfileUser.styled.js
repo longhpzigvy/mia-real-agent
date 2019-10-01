@@ -65,11 +65,11 @@ export const ProfileUserAction = styled.div`
   a.my-account{
     height: 3em;
     display: flex;
+    color: ${props => props.theme.colorStyled.ColorPrimary};
     justify-content: center;
-    color: #010101!important;
     align-items: center;
     &:hover {
-      opacity: .7;
+      color: ${props => props.theme.colorStyled.ColorPrimaryHover};
       background-color: #fff;
     }
 }
@@ -82,12 +82,12 @@ export const ProfileUserAction = styled.div`
     border: none;
   }  
   .sign-out {
-    color: #e4585a;
+    color: ${props => props.theme.colorStyled.ColorPrimary};
     width:100%;
     height: 3em;
     &:hover {
       background-color: #fff;
-      color: #b32628;
+      color: ${props => props.theme.colorStyled.ColorPrimaryHover};
     }
   }
 `;
@@ -178,11 +178,11 @@ export const AdditionalInformationWrapper = styled.div`
 export const AdditionalInformationTitle = styled.div`
   box-sizing: border-box;
   color: ${props => props.theme.colorStyled.ColorDarkGrey};
-  font-weight: 600;
 `;
 
 export const AdditionalInformationValue = styled.div`
   font-weight: 600;
+  font-size: 1.25em;
   color: ${props => props.theme.colorStyled.ColorBlack};
 `;
 

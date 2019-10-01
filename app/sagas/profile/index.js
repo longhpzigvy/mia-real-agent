@@ -157,11 +157,7 @@ function* topUp({ payload }) {
 }
 
 function* profileFlow() {
-<<<<<<< HEAD
-  yield takeEvery([FETCH_DETAIL, TICKET_CLOSE_SUCCESS, AUTH_LOGIN_SUCCESS], fetchDetail);
-=======
   yield takeEvery([FETCH_DETAIL, AUTH_LOGIN_SUCCESS, TICKET_CLOSE_SUCCESS], fetchDetail);
->>>>>>> Update Billing model
   yield takeEvery(UPDATE_PROFILE, updateProfile);
   yield takeEvery(CHECK_PASSWORD, checkPassword);
   yield takeEvery(CHANGE_PASSWORD, changePassword);

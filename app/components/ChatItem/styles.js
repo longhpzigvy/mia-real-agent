@@ -147,12 +147,8 @@ export const IsTypingWrapper = styled.div`
 `;
 
 export const ProfileImageStyled = styled.img`
-<<<<<<< HEAD
-  height: 2.78em;
-  width: 2.78em;
-=======
   height: 2.2em;
->>>>>>> Update Billing model
+  width: 2.2em;
   cursor: pointer;
   border-radius: 100%;
 `;
