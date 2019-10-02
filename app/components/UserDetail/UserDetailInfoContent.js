@@ -24,8 +24,10 @@ const defaultColumns = [
   {
     headerPropertise: {
       value: toI18n('ADMIN_USERS_DETAIL_TICKET_TABLE_TICKET_ID'),
+      percent: 3,
     },
     contentPropertise: {
+      percent: 3,
     },
     dataKey: 'ticketId',
     type: COLUMN_TYPE.TEXT,
@@ -33,8 +35,10 @@ const defaultColumns = [
   {
     headerPropertise: {
       value: toI18n('ADMIN_USERS_DETAIL_TICKET_TABLE_CREATED_AT'),
+      percent: 10,
     },
     contentPropertise: {
+      percent: 10,
     },
     dataKey: 'createdAt',
     type: COLUMN_TYPE.DATE,
@@ -43,8 +47,10 @@ const defaultColumns = [
   {
     headerPropertise: {
       value: toI18n('ADMIN_USERS_DETAIL_TICKET_TABLE_CATEGORY'),
+      percent: 10,
     },
     contentPropertise: {
+      percent: 10,
     },
     dataKey: 'category',
     type: COLUMN_TYPE.TEXT,
@@ -52,8 +58,11 @@ const defaultColumns = [
   {
     headerPropertise: {
       value: toI18n('ADMIN_USERS_DETAIL_TICKET_TABLE_TITLE'),
+      percent: 10,
     },
-    contentPropertise: {},
+    contentPropertise: {
+      percent: 10,
+    },
     dataKey: 'title',
     type: COLUMN_TYPE.TEXT,
   },
@@ -177,8 +186,10 @@ class UserDetailInfoContent extends PureComponent {
         {
           headerPropertise: {
             value: toI18n('ADMIN_USERS_DETAIL_TICKET_TABLE_ASSIGNEE'),
+            percent: 10,
           },
           contentPropertise: {
+            percent: 10,
           },
           dataKey: 'assignee.username',
           type: COLUMN_TYPE.TEXT,
@@ -198,9 +209,11 @@ class UserDetailInfoContent extends PureComponent {
         ...defaultColumns,
         {
           headerPropertise: {
-            value: toI18n('ADMIN_USERS_DETAIL_TICKET_TABLE_OWNER'),            
+            value: toI18n('ADMIN_USERS_DETAIL_TICKET_TABLE_OWNER'),
+            percent: 10,
           },
           contentPropertise: {
+            percent: 10,
           },
           dataKey: 'owner.username',
           type: COLUMN_TYPE.TEXT,
@@ -210,6 +223,7 @@ class UserDetailInfoContent extends PureComponent {
             value: 'Status',
           },
           contentPropertise: {
+            percent: 10,
             size: '100',
           },
           dataKey: 'status',

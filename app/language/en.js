@@ -383,7 +383,7 @@ const en = {
     NAVBAR_PROFILE_VN: 'Vietnamese',
     // Close Ticket Modal
     CLOSE_TICKET_MODAL_CLOSED_STATUS: 'Closed Status',
-    CLOSE_TICKET_MODAL_UNSOLVED_REASON: 'Unsolved Reason',
+    CLOSE_TICKET_MODAL_UNSOLVED_REASON: 'Unsolved Reason(*)',
     CLOSE_TICKET_MODAL_CLOSE_TICKET: 'Close Ticket',
 
     // Canned Response Admin
@@ -484,6 +484,14 @@ const en = {
     APPLICATION_REVIEW_FORM_PENDING_CHANGE: 'Are you sure cancel Review this application?',
     // REQUEST CHANGE
     REQUEST_CHANGE_LOGO: 'APPLICATION UPDATE',
+    // TICKET RECEIPT
+    TICKET_RECEIPT_TITLE: 'Ticket Receipt',
+    TICKET_RECEIPT_BOT_TIME: 'Time for MIA',
+    TICKET_RECEIPT_AGENT_TIME: 'Time for Agent',
+    TICKET_RECEIPT_TOTAL: 'Total',
+    TICKET_RECEIPT_REMAIN: 'Remaining Credit time',
+    TICKET_RECEIPT_BOT_FEE: '',
+    TICKET_RECEIPT_AGENT_FEE: '',
   },
 };
 

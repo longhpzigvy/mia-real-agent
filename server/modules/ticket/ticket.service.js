@@ -11,7 +11,9 @@ import { sendEmailTrascript } from '../../mail-sparkpost/sparkpost';
 import UserService from '../user/user.service';
 import BillingService from '../billing/billing.service';
 import { conversationTranscript } from '../../mail-sparkpost/dynamicTemplate';
-import { ticketAdminAggregration, ticketWarningAdminAggregration, calculateChargeTime, directChargeTicket } from './ticket.utils';
+import { ticketAdminAggregration, ticketWarningAdminAggregration, directChargeTicket, totalTicketWarningAggregration } from './ticket.utils';
+import { MIA_RATE } from '../../../app/utils/constants';
+import { calculateChargeTime } from '../../../app/utils/func-utils';
 
 class TicketService extends BaseService {
   constructor(collection) {
@@ -89,9 +91,10 @@ class TicketService extends BaseService {
     const resultPromise = this.collection
       .aggregate(ticketWarningAdminAggregration(queryCondition, Number(limit), Number(skip), sort))
       .exec();
+    const { totalRecord } = (await this.collection.aggregate(totalTicketWarningAggregration(queryCondition)).exec())[0];
     return {
       result: await resultPromise,
-      totalRecord: await this.countDocument(queryCondition),
+      totalRecord,
     };
   }
 
@@ -213,7 +216,6 @@ class TicketService extends BaseService {
     // Direct charge if has remaining ticket time
     let miaFee = 0;
     let agentFee = 0;
-    const miaRate = 5; // TODO: Replace with system mia rate
     let agentRate = 0;
     let chargeAmount = 0;
     if ((remainingOpeningTime > 0 || remainingProcessingTime > 0)
@@ -221,7 +223,7 @@ class TicketService extends BaseService {
       needDirectCharge = true;
       // Convert usedTime to $
       if (remainingOpeningTime > 0) {
-        miaFee = Number(miaRate * remainingOpeningTime / 60).toFixed(2);
+        miaFee = Number(MIA_RATE * remainingOpeningTime / 60).toFixed(2);
       }
       if (remainingProcessingTime > 0 && assignee) {
         const { _id: assigneeId } = assignee;
@@ -251,7 +253,7 @@ class TicketService extends BaseService {
           timeBeforeChat,
           openingTime,
           processingTime,
-          miaRate,
+          miaRate: MIA_RATE,
           agentRate,
         },
         {

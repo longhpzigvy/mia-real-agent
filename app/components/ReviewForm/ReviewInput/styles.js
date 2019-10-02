@@ -160,6 +160,9 @@ export const ListItemWrapper = styled.div`
   span {
     display: flex;
   }
+  :last-of-type {
+    border-bottom: none;
+  }
 `;
 
 export const ListFieldLabel = styled.div`

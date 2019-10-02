@@ -15,7 +15,7 @@ import TicketOverview from '../TicketDetail/TicketOverview';
 
 const conversationScrollStyle = {
   height: 'calc(100vh - 220px)',
-  width: '100%',
+  width: '50%',
 };
 
 class TicketWarningInfo extends PureComponent {

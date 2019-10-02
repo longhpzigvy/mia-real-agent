@@ -6,7 +6,7 @@ import TicketService from '../../ticket/ticket.service';
 import UserService from '../../user/user.service';
 import { ROLES } from '../../../../common/enums';
 import APIError, { ERROR_MESSAGE } from '../../../utils/APIError';
-import { isAgent } from '../../../../app/utils/func-utils';
+import { isAgent, isUser } from '../../../../app/utils/func-utils';
 
 const emptyObjString = '{}';
 class UserController extends BaseController {
@@ -30,7 +30,7 @@ class UserController extends BaseController {
         const populateCondition = { path: 'owner', select: ['_id', 'username'] };
         const tickets = await TicketService.getAllByConditionWithPopulationInfo(ticketCondition, populateCondition);
         userObj.tickets = tickets;
-      } else if (role === ROLES.INDIVIDUAL) {
+      } else if (isUser(role)) {
         const ticketCondition = { owner: _id };
         const populateCondition = { path: 'assignee', select: ['_id', 'username'] };
         const tickets = await TicketService.getAllByConditionWithPopulationInfo(ticketCondition, populateCondition);

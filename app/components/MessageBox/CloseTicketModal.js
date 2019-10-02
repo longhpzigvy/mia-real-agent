@@ -14,6 +14,7 @@ import { ActionBar } from '../CreateTicket/styles';
 import { getTicketIsClosing, getTicketCloseError } from '../../selectors/ticket';
 import LoadingSpin from '../Loading';
 import { ButtonCancel, ButtonSubmit } from '../../stylesheets/Button.style';
+import TicketReceipt from '../../containers/TicketReceipt/TicketReceipt';
 
 
 const initialValues = {
@@ -77,13 +78,16 @@ class CloseTicketModal extends React.PureComponent {
       >
         {({ handleSubmit, values }) => (
           <Modal
-            title="Close tickets"
+            title={toI18n('TICKET_RECEIPT_TITLE')}
             visible={isOpen}
             onOk={handleSubmit}
             onCancel={handleCloseModal}
             footer={null}
           >
             <LoadingSpin loading={isClosing}>
+              {
+                values.status === TICKET_STATUS.SOLVED && (<TicketReceipt />)
+              }
               <Form>
                 <Row gutter={32}>
                   <Col sm={24} xs={24}>
@@ -95,7 +99,6 @@ class CloseTicketModal extends React.PureComponent {
                         value,
                         label: value,
                       }))}
-                      login={1}
                     />
                     {
                       values.status === TICKET_STATUS.UNSOLVED && (

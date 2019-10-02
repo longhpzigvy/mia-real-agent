@@ -12,7 +12,7 @@ import {
 } from 'components/Generals/ItemDetail.styled';
 import { Popconfirm } from 'antd';
 import { toI18n } from '../../utils/func-utils';
-import { ButtonReject } from '../../stylesheets/Button.style';
+import { ButtonDefault } from '../../stylesheets/Button.style';
 
 class UserDetailInfoHeader extends PureComponent {
   goToEditPage = () => {
@@ -31,7 +31,7 @@ class UserDetailInfoHeader extends PureComponent {
       <TitleDetailsHead>
         <HeaderTextDetails>
           {username}
-          <i className="mia-edit" onClick={this.goToEditPage} />
+          {/* <i className="mia-edit" onClick={this.goToEditPage} /> */}
         </HeaderTextDetails>
         <AdminHeadActionGroup>
           <Popconfirm
@@ -40,10 +40,10 @@ class UserDetailInfoHeader extends PureComponent {
             okText={toI18n('FORM_YES')}
             cancelText={toI18n('FORM_NO')}
           >
-            <ButtonReject>
+            <ButtonDefault>
               <i className="mia-close" />
               <span>{toI18n('ADMIN_USERS_DETAIL_REMOVE')}</span>
-            </ButtonReject>
+            </ButtonDefault>
           </Popconfirm>
         </AdminHeadActionGroup>
       </TitleDetailsHead>

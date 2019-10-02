@@ -13,7 +13,7 @@ import { DATE_TIME_FORMAT, NUMERAL_MONEY_FORMAT } from '../../utils/constants';
 import {
   AddText, MinusText, BoldText, MoneyText,
 } from './styles';
-import { toI18n } from '../../utils/func-utils';
+import { toI18n, getHourMinutes } from '../../utils/func-utils';
 
 export class BillingRow extends TableRow {
   renderBillingColumn = (column, index) => {
@@ -30,6 +30,7 @@ export class BillingRow extends TableRow {
     const { createdAt, total, content } = item;
     const { exchangeRate } = content;
     const { amount } = total;
+    const time = getHourMinutes(amount * exchangeRate);
     return [
       {
         value: (<span>
@@ -49,7 +50,7 @@ export class BillingRow extends TableRow {
         percent: 25,
       },
       {
-        value: (<AddText>{`+ ${amount * exchangeRate}m`}</AddText>),
+        value: (<AddText>{`+ ${Numeral(time.hours).format('00')}:${Numeral(time.minutes).format('00')}`}</AddText>),
         percent: 15,
         justify: 'flex-end',
       },
@@ -62,6 +63,7 @@ export class BillingRow extends TableRow {
     const { ticketId } = content;
     const { usedCreditTime, chargeAmount } = total;
     const renders = [];
+    const time = getHourMinutes(usedCreditTime);
     if (usedCreditTime > 0) {
       renders.push(
         [
@@ -81,7 +83,7 @@ export class BillingRow extends TableRow {
             percent: 25,
           },
           {
-            value: (<MinusText>{`- ${usedCreditTime}m`}</MinusText>),
+            value: (<MinusText>{`- ${Numeral(time.hours).format('00')}:${Numeral(time.minutes).format('00')}`}</MinusText>),
             percent: 15,
             justify: 'flex-end',
           },

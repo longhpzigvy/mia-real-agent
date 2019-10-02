@@ -162,8 +162,8 @@ export const InputWrapperStyled = styled(Form.Item)`
     border-bottom: 1px solid #d2d2d2!important;
     &:focus {
       box-shadow: none;
-      border-radius: 3px !important;
-      border: 1px solid #000 !important;
+      /* border-radius: 3px !important;
+      border: 1px solid #000 !important; */
     }
     &:hover {
       border-color: ${props => props.theme.colorStyled.ColorBlack};
@@ -184,8 +184,9 @@ export const InputWrapperStyled = styled(Form.Item)`
     margin-top: 3px;
   }
   .ant-select-selection-selected-value {
-    background-color: #fafafa;
-    padding-left: 10px;
+    ${props => props.mode === 'multiple' && {
+    backgroundColor: '#fafafa',
+  }}
   }
   .ant-slider-track {
     background-color: #ec976e !important;
@@ -204,8 +205,8 @@ export const InputWrapperStyled = styled(Form.Item)`
       border-radius: 0px !important;
       &:focus {
         box-shadow: none;
-        border-radius: 3px !important;
-        border: 1px solid #000 !important;
+        /* border-radius: 3px !important;
+        border: 1px solid #000 !important; */
       }
     }
   `}

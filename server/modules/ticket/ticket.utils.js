@@ -1,7 +1,5 @@
-import moment from 'moment';
 import * as StripeService from '../stripe/stripe.service';
 import { TICKET_STATUS } from '../../../common/enums';
-import { calculateStatusTime } from '../../../app/utils/func-utils';
 
 export const ticketAdminAggregration = (conditions, limit, skip, sort) => [
   {
@@ -82,6 +80,53 @@ export const ticketAdminAggregration = (conditions, limit, skip, sort) => [
     $skip: skip,
   }, {
     $limit: limit,
+  },
+];
+
+export const totalTicketWarningAggregration = conditions => [
+  {
+    $match: {
+      ...conditions,
+    },
+  }, {
+    $lookup: {
+      from: 'reply',
+      localField: 'conversationId',
+      foreignField: 'conversationId',
+      as: 'replies',
+    },
+  }, {
+    $project: {
+      conversationId: 1,
+      status: 1,
+      owner: 1,
+      assignee: 1,
+      category: 1,
+      title: 1,
+      description: 1,
+      history: 1,
+      replies: {
+        $filter: {
+          input: '$replies',
+          as: 'replies',
+          cond: {
+            $eq: [
+              '$$replies.type', 'WARNING_ACTION',
+            ],
+          },
+        },
+      },
+    },
+  }, {
+    $unwind: {
+      path: '$replies',
+    },
+  }, {
+    $group: {
+      _id: '$_id',
+    },
+  }, {
+    $count: 'totalRecord',
   },
 ];
 
@@ -230,38 +275,6 @@ export const ticketWarningAdminAggregration = (conditions, limit, skip, sort) =>
     $limit: limit,
   },
 ];
-
-export const calculateChargeTime = (ticket, user) => {
-  const {
-    processingDate, history,
-  } = ticket;
-  // Calculate Ticket Time
-  const firstOpen = history[0];
-  const timeBeforeChat = moment(firstOpen.startTime).diff(
-    moment(processingDate), 'minutes'
-  );
-  const openingTime = timeBeforeChat + calculateStatusTime(history, [TICKET_STATUS.OPEN]);
-  const processingTime = calculateStatusTime(history, [TICKET_STATUS.PROCESSING]);
-  const { creditTime: userCreditTime } = user;
-  // Calculate Used Credit Time
-  const remainingOpeningTime = openingTime - userCreditTime;
-  let remainingCreditTime = (userCreditTime - openingTime >= 0)
-    ? userCreditTime - openingTime : 0;
-  const remainingProcessingTime = processingTime - remainingCreditTime;
-  if (remainingCreditTime > 0) {
-    remainingCreditTime = (remainingCreditTime - processingTime > 0)
-      ? remainingCreditTime - processingTime : 0;
-  }
-  return {
-    timeBeforeChat,
-    openingTime,
-    processingTime,
-    remainingOpeningTime,
-    remainingProcessingTime,
-    userCreditTime,
-    remainingCreditTime,
-  };
-};
 
 export const directChargeTicket = (
   ticketId, creditCard, stripeCustomerId, miaFee, agentFee

@@ -10,7 +10,6 @@ export const conversationTranscript = (messages) => {
       _id, type, sentAt,
       from: ownerMessage, contents,
     } = message;
-    console.log(ownerMessage)
     switch (type) {
       case REPLY_TYPE.WARNING_ACTION:
         return warningAction(_id, ownerMessage, contents, sentAt);

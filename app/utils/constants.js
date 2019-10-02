@@ -445,3 +445,5 @@ export const APPLICATION_REVIEW_MAPPING = {
     },
   },
 };
+
+export const MIA_RATE = 5;

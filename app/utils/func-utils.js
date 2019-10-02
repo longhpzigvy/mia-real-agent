@@ -4,7 +4,7 @@ import _isEmpty from 'lodash/isEmpty';
 import _eq from 'lodash/eq';
 import _keyBy from 'lodash/keyBy';
 import { Trans } from 'react-i18next';
-import { ROLES, REPLY_TYPE } from '../../common/enums';
+import { ROLES, REPLY_TYPE, TICKET_STATUS } from '../../common/enums';
 
 export const combineChat = (replyMessages = []) => {
   const combined = [];
@@ -139,4 +139,36 @@ export const generateInitValue = (type) => {
     default:
       return null;
   }
+};
+
+export const calculateChargeTime = (ticket, user) => {
+  const {
+    processingDate, history,
+  } = ticket;
+  // Calculate Ticket Time
+  const firstOpen = history[0];
+  const timeBeforeChat = moment(firstOpen.startTime).diff(
+    moment(processingDate), 'minutes'
+  );
+  const openingTime = timeBeforeChat + calculateStatusTime(history, [TICKET_STATUS.OPEN]);
+  const processingTime = calculateStatusTime(history, [TICKET_STATUS.PROCESSING]);
+  const { creditTime: userCreditTime } = user;
+  // Calculate Used Credit Time
+  const remainingOpeningTime = openingTime - userCreditTime;
+  let remainingCreditTime = (userCreditTime - openingTime >= 0)
+    ? userCreditTime - openingTime : 0;
+  const remainingProcessingTime = processingTime - remainingCreditTime;
+  if (remainingCreditTime > 0) {
+    remainingCreditTime = (remainingCreditTime - processingTime > 0)
+      ? remainingCreditTime - processingTime : 0;
+  }
+  return {
+    timeBeforeChat,
+    openingTime,
+    processingTime,
+    remainingOpeningTime,
+    remainingProcessingTime,
+    userCreditTime,
+    remainingCreditTime,
+  };
 };
