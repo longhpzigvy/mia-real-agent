@@ -378,6 +378,7 @@ const en = {
     CREDIT_REMOVE_SUCCESS: 'Card Removed from account',
     // Navbar profile
     NAVBAR_PROFILE_CREDIT_TIME: 'Credit time',
+    NAVBAR_PROFILE_CREDIT: 'Credit',
     NAVBAR_PROFILE_LANGUAGE: 'Language',
     NAVBAR_PROFILE_EN: 'English',
     NAVBAR_PROFILE_VN: 'Vietnamese',

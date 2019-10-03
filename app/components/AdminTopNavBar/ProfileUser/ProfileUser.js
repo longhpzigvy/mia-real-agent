@@ -13,10 +13,11 @@ import {
   AdditionalInformationTitle,
   AdditionalInformationValue,
 } from './ProfileUser.styled';
-import { toI18n, isUser } from '../../../utils/func-utils';
+import { toI18n, isUser, isAgent } from '../../../utils/func-utils';
+import { NUMERAL_MONEY_FORMAT } from '../../../utils/constants';
 
 class ProfileUser extends React.PureComponent {
-  renderAdditionalInformation = () => {
+  renderUserAdditionalInformation = () => {
     const { profile } = this.props;
     const { creditTime } = profile;
     return (
@@ -26,6 +27,21 @@ class ProfileUser extends React.PureComponent {
         </AdditionalInformationTitle>
         <AdditionalInformationValue>
           {numeral(creditTime * 60).format('00:00:00')}
+        </AdditionalInformationValue>
+      </AdditionalInformationWrapper>
+    );
+  }
+
+  renderAgentAdditionalInformation = () => {
+    const { profile } = this.props;
+    const { credit } = profile;
+    return (
+      <AdditionalInformationWrapper>
+        <AdditionalInformationTitle>
+          {toI18n('NAVBAR_PROFILE_CREDIT')}
+        </AdditionalInformationTitle>
+        <AdditionalInformationValue>
+          {numeral(credit).format(NUMERAL_MONEY_FORMAT)}
         </AdditionalInformationValue>
       </AdditionalInformationWrapper>
     );
@@ -41,7 +57,8 @@ class ProfileUser extends React.PureComponent {
       <ProfileUserInfoWrapper>
         <ProfileUserHead>
           <ProfileUserAction>
-            {isUser(role) && this.renderAdditionalInformation()}
+            {isUser(role) && this.renderUserAdditionalInformation()}
+            {isAgent(role) && this.renderAgentAdditionalInformation()}
             <Link to="/profile" className="my-account">{toI18n('DB_PROFILE_MY_ACCOUNT')}</Link>
             <button className="sign-out" onClick={onLogout}>
               {toI18n('DB_PROFILE_SIGN_OUT')}
@@ -55,9 +72,7 @@ class ProfileUser extends React.PureComponent {
 
 ProfileUser.propTypes = {
   onLogout: PropTypes.func,
-  changeLanguage: PropTypes.func,
   profile: PropTypes.shape(),
-  lngCode: PropTypes.string,
 };
 
 export default ProfileUser;

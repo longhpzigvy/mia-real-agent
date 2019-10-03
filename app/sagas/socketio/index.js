@@ -13,11 +13,12 @@ import {
 import { addNewMessage, fetchReplyMessages } from '../../reducers/replies';
 import { actions as TICKET_ACTIONS } from '../../reducers/ticket';
 import { actions as REQUEST_ACTIONS } from '../../reducers/requests';
+import { actions as PROFILE_ACTIONS } from '../../reducers/profile';
 import {
   actions as CONVERSATION_ACTIONS, fetchConversation,
   USER_JOIN_CONVERSATION, USER_TYPING, getCurrentConveration, USER_LEFT_CONVERSATION,
 } from '../../reducers/conversations';
-import { SOCKET_EMIT } from '../../../common/enums';
+import { SOCKET_EMIT, REPLY_TYPE, TICKET_STATUS } from '../../../common/enums';
 import history from '../../utils/history';
 
 
@@ -63,6 +64,13 @@ function* handleNewMessage() {
   while (true) {
     const { conversationId, reply } = yield take(socketChannel);
     yield put(addNewMessage(conversationId, reply));
+    const { type, params } = reply;
+    if (type === REPLY_TYPE.TICKET_STATUS) {
+      const { status } = params;
+      if (status === TICKET_STATUS.SOLVED) {
+        yield put(PROFILE_ACTIONS.fetchDetailAction());
+      }
+    }
   }
 }
 
