@@ -45,7 +45,9 @@ class TicketReceipt extends React.PureComponent {
       }
     }
     const opening = getHourMinutes(openingTime);
+    const openingRemain = getHourMinutes(remainingOpeningTime);
     const processing = getHourMinutes(processingTime);
+    const processingRemain = getHourMinutes(remainingProcessingTime);
     const total = getHourMinutes(openingTime + processingTime);
     const remainingTime = getHourMinutes(remainingCreditTime);
 
@@ -94,26 +96,28 @@ class TicketReceipt extends React.PureComponent {
         </ReceiptRow>
         {!!miaFee && (
           <ReceiptRow>
-            <ReceiptCol span={16}>
+            <ReceiptCol span={16} bold>
               {toI18n('TICKET_RECEIPT_BOT_FEE')}
               {
-                `: ${remainingOpeningTime} * ${MIA_RATE}`
+                `: ${Numeral(openingRemain.hours).format('00')}:${Numeral(openingRemain.minutes).format('00')}
+                 * ${Numeral(MIA_RATE).format(NUMERAL_MONEY_FORMAT)}`
               }
             </ReceiptCol>
-            <ReceiptCol span={8}>
+            <ReceiptCol span={8} hightlight mega>
               {Numeral(miaFee).format(NUMERAL_MONEY_FORMAT)}
             </ReceiptCol>
           </ReceiptRow>
         )}
         {!!agentFee && (
           <ReceiptRow>
-            <ReceiptCol span={16}>
+            <ReceiptCol span={16} bold>
               {toI18n('TICKET_RECEIPT_AGENT_FEE')}
               {
-                `: ${remainingProcessingTime} * ${agentRate}`
+                `: ${Numeral(processingRemain.hours).format('00')}:${Numeral(processingRemain.minutes).format('00')}
+                 * ${Numeral(agentRate).format(NUMERAL_MONEY_FORMAT)}`
               }
             </ReceiptCol>
-            <ReceiptCol span={8}>
+            <ReceiptCol span={8} hightlight mega>
               {Numeral(agentFee).format(NUMERAL_MONEY_FORMAT)}
             </ReceiptCol>
           </ReceiptRow>

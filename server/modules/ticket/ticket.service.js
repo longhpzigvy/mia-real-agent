@@ -1,7 +1,7 @@
 import _isEmpty from 'lodash/isEmpty';
 import ticketCollection from './ticket.model';
 import BaseService from '../base/base.service';
-import { TICKET_STATUS, REPLY_TYPE } from '../../../common/enums';
+import { TICKET_STATUS, REPLY_TYPE, BILLING_TYPE } from '../../../common/enums';
 // eslint-disable-next-line import/no-cycle
 import ReplyService from '../reply/reply.service';
 import ApplicationService from '../application/application.service';
@@ -228,7 +228,7 @@ class TicketService extends BaseService {
       if (remainingProcessingTime > 0 && assignee) {
         const { _id: assigneeId } = assignee;
         const { application } = await UserService.getById(assigneeId);
-        agentRate = await ApplicationService.get(application).billingRate;
+        agentRate = (await ApplicationService.get(application)).billingRate;
         agentFee = Number(agentRate * remainingProcessingTime / 60).toFixed(2);
       }
       chargeAmount = (+miaFee + +agentFee) >= 0.5 ? +miaFee + +agentFee : 0.5;
@@ -263,6 +263,28 @@ class TicketService extends BaseService {
           agentFee,
         }
       );
+      if (processingTime > 0) {
+        const { _id: assigneeId } = assignee;
+        // Add billing for agent
+        await BillingService.insert(
+          {
+            userId: assigneeId,
+            type: BILLING_TYPE.TICKET_FULFILL,
+            content: {
+              ticketId: _id,
+              processingTime,
+              agentRate,
+            },
+            total: {
+              agentFee,
+            },
+          }
+        );
+        await UserService.update(
+          assigneeId,
+          { $inc: { credit: Number(agentFee) } }
+        );
+      }
       return true;
     }
     return false;

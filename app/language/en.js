@@ -444,6 +444,7 @@ const en = {
     BILLING_INFO_ROW_VALUE: 'Value',
     BILLING_INFO_ROW_TOPUP: 'Top-up',
     BILLING_INFO_ROW_TIME_FOR_TICKET: 'Time for ticket',
+    BILLING_INFO_ROW_CREDIT_FOR_TICKET: 'Credit for ticket',
     BILLING_INFO_ROW_CHARGED_FOR_TICKET: 'Charged for ticket',
     // APPLICATION REVIEW
     APPLICATION_REVIEW_REQUEST_CHANGE: 'Request Change',
@@ -490,8 +491,8 @@ const en = {
     TICKET_RECEIPT_AGENT_TIME: 'Time for Agent',
     TICKET_RECEIPT_TOTAL: 'Total',
     TICKET_RECEIPT_REMAIN: 'Remaining Credit time',
-    TICKET_RECEIPT_BOT_FEE: '',
-    TICKET_RECEIPT_AGENT_FEE: '',
+    TICKET_RECEIPT_BOT_FEE: 'Charge for MIA',
+    TICKET_RECEIPT_AGENT_FEE: 'Charge for Agent',
   },
 };
 

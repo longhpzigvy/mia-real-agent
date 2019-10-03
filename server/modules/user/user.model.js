@@ -55,6 +55,11 @@ const userSchema = new Schema(
       required: true,
       default: 0,
     },
+    credit: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     creditCard: {
       type: [creditCardSchema],
       required: true,

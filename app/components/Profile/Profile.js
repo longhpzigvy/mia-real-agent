@@ -78,7 +78,7 @@ export default class Profile extends Component {
                   <ProfileBasicInfo user={user} />
                 </ProfileContentWrapper>
               </TabPane>
-              {!isAgent(role) && [(<TabPane tab={toI18n('PROFILE_PAYMENT_INFO_BILLING_INFO')} key="2">
+              {true && [(<TabPane tab={toI18n('PROFILE_PAYMENT_INFO_BILLING_INFO')} key="2">
                 <ProfileContentWrapper>
                   <BillingManagement noHeader />
                 </ProfileContentWrapper>

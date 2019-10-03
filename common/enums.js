@@ -645,6 +645,7 @@ export const FEEDBACK_STATUS = {
 export const BILLING_TYPE = {
   TOPUP: 'Top-up',
   TICKET_CHARGE: 'Ticket Charge',
+  TICKET_FULFILL: 'Ticket Fulfill',
 };
 
 export const LANGUAGE_OPTIONS = [
