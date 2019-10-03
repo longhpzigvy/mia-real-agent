@@ -519,6 +519,7 @@ export default class MessageBox extends Component {
           handleSubmitCloseTicket={this.handleCloseTicket}
           handleCloseModal={() => this.handleToggleCloseModal(false)}
           isOpen={closeTicketModalIsOpen}
+          isAgent={isAgent(userRole)}
         />
         <CreatTicketFormContainer
           isOpen={isOpenCreateModal}

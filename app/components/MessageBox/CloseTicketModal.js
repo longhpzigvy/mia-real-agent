@@ -15,6 +15,7 @@ import { getTicketIsClosing, getTicketCloseError } from '../../selectors/ticket'
 import LoadingSpin from '../Loading';
 import { ButtonCancel, ButtonSubmit } from '../../stylesheets/Button.style';
 import TicketReceipt from '../../containers/TicketReceipt/TicketReceipt';
+import TicketAgentReceipt from '../../containers/TicketAgentReceipt';
 
 
 const initialValues = {
@@ -40,6 +41,7 @@ class CloseTicketModal extends React.PureComponent {
   static propTypes = {
     isOpen: bool.isRequired,
     isClosing: bool.isRequired,
+    isAgent: bool,
     handleCloseModal: func.isRequired,
     closeError: string.isRequired,
     handleSubmitCloseTicket: func.isRequired,
@@ -61,6 +63,11 @@ class CloseTicketModal extends React.PureComponent {
 
 
   state = {}
+
+  renderTicketReceipt = () => {
+    const { isAgent } = this.props;
+    return isAgent ? (<TicketAgentReceipt />) : (<TicketReceipt />);
+  }
 
   render() {
     const {
@@ -86,7 +93,7 @@ class CloseTicketModal extends React.PureComponent {
           >
             <LoadingSpin loading={isClosing}>
               {
-                values.status === TICKET_STATUS.SOLVED && (<TicketReceipt />)
+                values.status === TICKET_STATUS.SOLVED && this.renderTicketReceipt()
               }
               <Form>
                 <Row gutter={32}>

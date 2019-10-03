@@ -490,6 +490,7 @@ const en = {
     TICKET_RECEIPT_TITLE: 'Ticket Receipt',
     TICKET_RECEIPT_BOT_TIME: 'Time for MIA',
     TICKET_RECEIPT_AGENT_TIME: 'Time for Agent',
+    TICKET_RECEIPT_AGENT_CREDIT: 'Agent Added Credit',
     TICKET_RECEIPT_TOTAL: 'Total',
     TICKET_RECEIPT_REMAIN: 'Remaining Credit time',
     TICKET_RECEIPT_BOT_FEE: 'Charge for MIA',

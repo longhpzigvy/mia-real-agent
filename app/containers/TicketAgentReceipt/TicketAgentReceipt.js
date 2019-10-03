@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import TicketReceipt from '../../components/TicketReceipt';
+import TicketReceipt from '../../components/TicketAgentReceipt';
 import { getCurrentTicket, getTicketById } from '../../selectors/ticket';
 import { selectors } from '../../reducers/profile';
 

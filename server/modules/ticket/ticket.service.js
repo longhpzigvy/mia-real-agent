@@ -219,6 +219,12 @@ class TicketService extends BaseService {
     let agentRate = 0;
     let chargeAmount = 0;
     let assigneeData = null;
+    const { _id: assigneeId } = assignee || {};
+    if (assignee) {
+      assigneeData = await UserService.getById(assigneeId);
+      const { application } = assigneeData;
+      agentRate = (await ApplicationService.get(application)).billingRate;
+    }
     if ((remainingOpeningTime > 0 || remainingProcessingTime > 0)
       && (!_isEmpty(creditCard) && stripeCustomerId)) {
       needDirectCharge = true;
@@ -227,10 +233,6 @@ class TicketService extends BaseService {
         miaFee = Number(MIA_RATE * remainingOpeningTime / 60).toFixed(2);
       }
       if (remainingProcessingTime > 0 && assignee) {
-        const { _id: assigneeId } = assignee;
-        assigneeData = await UserService.getById(assigneeId);
-        const { application } = assigneeData;
-        agentRate = (await ApplicationService.get(application)).billingRate;
         agentFee = Number(agentRate * remainingProcessingTime / 60).toFixed(2);
       }
       chargeAmount = (+miaFee + +agentFee) >= 0.5 ? +miaFee + +agentFee : 0.5;
@@ -266,8 +268,9 @@ class TicketService extends BaseService {
         }
       );
       if (processingTime > 0) {
-        const { _id: assigneeId, credit } = assigneeData;
+        const { credit } = assigneeData;
         // Add billing for agent
+        const agentPayout = Number(agentRate * processingTime / 60).toFixed(2);
         await BillingService.insert(
           {
             userId: assigneeId,
@@ -278,13 +281,13 @@ class TicketService extends BaseService {
               agentRate,
             },
             total: {
-              agentFee,
+              agentFe: agentPayout,
             },
           }
         );
         await UserService.update(
           assigneeId,
-          { credit: +credit + +agentFee }
+          { credit: +credit + +agentPayout }
         );
       }
       return true;
