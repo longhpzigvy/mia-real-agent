@@ -253,8 +253,7 @@ function profileReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_DETAIL:
       return state.set('isFetching', true)
-        .set('fetchError', '')
-        .set('fetchUser', {});
+        .set('fetchError', '');
     case FETCH_DETAIL_SUCCESS:
       return state.set('isFetching', false)
         .set('fetchUser', action.payload);

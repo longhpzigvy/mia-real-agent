@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Row, Col } from 'antd';
 
 export const ReceiptWrapper = styled.div`
@@ -26,17 +26,38 @@ export const ReceiptRow = styled(Row).attrs({
   }
 `;
 
+export const ReceiptTableRow = styled(ReceiptRow)`
+  ${props => props.grid && css`
+    > div {
+      border-right: 1px solid ${props.theme.colorStyled.ColorBorder};
+      margin-bottom: -4px;
+      padding: 5px 16px;
+    }
+    > div:last-child{
+      border-right: none;
+    }
+      border: 1px solid ${props.theme.colorStyled.ColorBorder};
+      margin-bottom: 0;
+      border-bottom: none;
+      :last-of-type{
+        margin-bottom: .2em;
+        border-bottom: 1px solid ${props.theme.colorStyled.ColorBorder};
+      }
+  `}
+`;
+
 export const ReceiptCol = styled(Col)`
   ${props => props.bold && {
     fontSize: '1.2em',
   }}
   ${props => props.mega && {
-    fontSize: '1.4em !important',
+    fontSize: '1.3em !important',
   }}
-  ${props => props.hightlight && {
+  ${props => props.highlight && {
     color: props.theme.colorStyled.ColorPrimary,
   }}
-  :last-of-type{
-    font-size: 1.2em;
-  }
+  text-align: ${props => props.align || 'unset'};
+  ${props => props.weight && css`
+      font-weight: 600;
+  `}
 `;

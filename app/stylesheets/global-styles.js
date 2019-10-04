@@ -110,6 +110,7 @@ html, body, div, span, applet, object, iframe,
   }
   .ant-menu-item.ant-menu-item-selected {
     color: #fff;
+    border-bottom: none;
   }
   .ant-dropdown-menu {
     padding: 0 !important;

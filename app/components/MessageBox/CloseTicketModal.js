@@ -89,6 +89,7 @@ class CloseTicketModal extends React.PureComponent {
             visible={isOpen}
             onOk={handleSubmit}
             onCancel={handleCloseModal}
+            width={800}
             footer={null}
           >
             <LoadingSpin loading={isClosing}>

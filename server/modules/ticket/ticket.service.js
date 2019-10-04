@@ -281,7 +281,7 @@ class TicketService extends BaseService {
               agentRate,
             },
             total: {
-              agentFe: agentPayout,
+              agentFee: agentPayout,
             },
           }
         );
