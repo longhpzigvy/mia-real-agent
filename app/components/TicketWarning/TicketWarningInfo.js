@@ -2,21 +2,54 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import _isEmpty from 'lodash/isEmpty';
-import Scrollbar from 'components/Scrollbar';
+import TableDetail from 'components/Generals/TableDetail';
 import SpinnerLoading from 'components/PageLoading/SpinnerLoading';
 import { AdminDetailsContainer, PleaseSelect } from 'components/Generals/ItemDetail.styled';
 import ErrorContent from 'components/ErrorContent';
 import TicketDetailInfoHeader from './TicketWarningInfoHeader';
-import { conversationTranscript } from './TicketWarningConversationLog';
 import { ConversationLogWrapper, ActionWrapper } from './styles';
 import { ButtonPrimary } from '../../stylesheets/Button.style';
 import { toI18n } from '../../utils/func-utils';
 import TicketOverview from '../TicketDetail/TicketOverview';
+import { REPLY_TYPE } from '../../../common/enums';
+import { COLUMN_TYPE, DATE_TIME_FORMAT } from '../../utils/constants';
 
-const conversationScrollStyle = {
-  height: 'calc(100vh - 220px)',
-  width: '50%',
-};
+const defaultColumns = [
+  {
+    headerPropertise: {
+      value: toI18n('ADMIN_TICKET_WARNING_TABLE_FROM'),
+      percent: 10,
+    },
+    contentPropertise: {
+      percent: 10,
+    },
+    dataKey: 'from.username',
+    type: COLUMN_TYPE.TEXT,
+  },
+  {
+    headerPropertise: {
+      value: toI18n('ADMIN_TICKET_WARNING_TABLE_SEND_AT'),
+      percent: 20,
+    },
+    contentPropertise: {
+      percent: 20,
+    },
+    dataKey: 'sentAt',
+    type: COLUMN_TYPE.DATE,
+    format: DATE_TIME_FORMAT.DATE_TIME,
+  },
+  {
+    headerPropertise: {
+      value: toI18n('ADMIN_TICKET_WARNING_TABLE_MESSAGES'),
+      percent: 70,
+    },
+    contentPropertise: {
+      percent: 70,
+    },
+    dataKey: 'messages',
+    type: COLUMN_TYPE.TEXT,
+  },
+];
 
 class TicketWarningInfo extends PureComponent {
   componentDidMount() {
@@ -46,8 +79,14 @@ class TicketWarningInfo extends PureComponent {
     }
   }
 
+  renderConversationLog = () => {
+    const { conversationLog } = this.props;
+    const warnings = conversationLog.filter(({ type }) => type === REPLY_TYPE.WARNING_ACTION);
+    return <TableDetail columns={defaultColumns} items={warnings} emptyMsg="No tickets available" />;
+  }
+
   render() {
-    const { ticketDetail, isFetchingReplies, conversationLog } = this.props;
+    const { ticketDetail, isFetchingReplies } = this.props;
     if (ticketDetail.isLoading || isFetchingReplies) {
       return (
         <AdminDetailsContainer>
@@ -80,12 +119,7 @@ class TicketWarningInfo extends PureComponent {
         <TicketDetailInfoHeader title={title} status={status} />
         <ConversationLogWrapper>
           <TicketOverview ticketDetail={ticketDetail} />
-          <h2>
-            {toI18n('ADMIN_TICKET_WARNING_DETAIL_VIOLATION_MESSAGES')}
-          </h2>
-          <Scrollbar autoHide style={conversationScrollStyle}>
-            {conversationTranscript(conversationLog)}
-          </Scrollbar>
+          {this.renderConversationLog()}
           <ActionWrapper>
             <ButtonPrimary type="primary">
               {toI18n('ADMIN_TICKET_WARNING_DETAIL_CONTACT_AGENT')}
