@@ -10,7 +10,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import FormInput from '../FormInput/FormInput';
 import { toI18n } from '../../utils/func-utils';
-import { ModalStyled, ErrorMessage, ParameterValue, ParameterTitle, ParameterWrapper, ParameterFormActionGroup } from './styles';
+import { ModalStyled, ErrorMessage, ParameterValue, ParameterTitle, ParameterWrapper, ParameterFormActionGroup, ParameterListWrapper } from './styles';
 import { ButtonPrimary, ButtonDefault } from '../../stylesheets/Button.style';
 
 const initialResponseValues = {
@@ -45,7 +45,7 @@ const initialState = {
 };
 
 class ResponseFormModal extends Component {
-  state = initialState
+  state = initialState;
 
   static propTypes = {
     submitAction: func.isRequired,
@@ -62,6 +62,10 @@ class ResponseFormModal extends Component {
     const { isSubmitting, submitError, initialValues: response } = this.props;
     if (_isEmpty(prevInitialValues) && !_isEmpty(response)) {
       this.responseFormik.getFormikContext().setValues(response);
+      const { parameters = [] } = response || {};
+      this.setState({
+        selectedParameters: parameters,
+      });
       return;
     }
     if (prevIsCreating && !isSubmitting) {
@@ -88,13 +92,10 @@ class ResponseFormModal extends Component {
 
   handleParameterOption = () => {
     const { selectedParameters } = this.state;
-    const { currentIntent, initialValues } = this.props;
-    const { parameters: editResponseParameters } = initialValues;
+    const { currentIntent } = this.props;
     const { parameters = [] } = currentIntent || {};
     const filtered = parameters.filter(
       ({ parameterId }) => !selectedParameters.find(
-        param => parameterId === param.parameterId
-      ) && !editResponseParameters.find(
         param => parameterId === param.parameterId
       )
     );
@@ -163,15 +164,17 @@ class ResponseFormModal extends Component {
       ({ parameterId, value }) => {
         const { displayName } = parameters.find(({ parameterId: itemId }) => parameterId === itemId);
         return (
-          <ParameterWrapper>
-            <ParameterTitle>
-              {`[${displayName}]`}
-            </ParameterTitle>
-            <ParameterValue>
-              {value}
-            </ParameterValue>
-            <Icon onClick={() => this.removeParameter(parameterId)} type="close" />
-          </ParameterWrapper>
+          <Col span={12}>
+            <ParameterWrapper>
+              <ParameterTitle>
+                {`[${displayName}]`}
+              </ParameterTitle>
+              <ParameterValue>
+                {value}
+              </ParameterValue>
+              <Icon onClick={() => this.removeParameter(parameterId)} type="close" />
+            </ParameterWrapper>
+          </Col>
         );
       }
     );
@@ -263,11 +266,9 @@ class ResponseFormModal extends Component {
             )}
             <ErrorMessage>{paramError}</ErrorMessage>
             <Form>
-              <Row gutter={32}>
-                <Col sm={24} xs={24}>
-                  {this.handleRenderAddedParameter(values)}
-                </Col>
-              </Row>
+              <ParameterListWrapper gutter={32}>
+                {this.handleRenderAddedParameter(values)}
+              </ParameterListWrapper>
               <Row gutter={32}>
                 <Col sm={24} xs={24}>
                   <FormInput

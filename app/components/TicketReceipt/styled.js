@@ -31,7 +31,7 @@ export const ReceiptTableRow = styled(ReceiptRow)`
     > div {
       border-right: 1px solid ${props.theme.colorStyled.ColorBorder};
       margin-bottom: -4px;
-      padding: 5px 16px;
+      padding: 16px;
     }
     > div:last-child{
       border-right: none;
