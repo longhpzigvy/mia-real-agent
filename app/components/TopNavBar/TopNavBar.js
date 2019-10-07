@@ -18,6 +18,7 @@ import ProfileUser from '../../containers/ProfileUser';
 import { PopupOverlayStyled } from '../Generals/General.styled';
 import { isAgent } from '../../utils/func-utils';
 import ChangeLanguage from '../../containers/ChangeLanguage/ChangeLanguage';
+import { DEFAULT_USER_AVATAR } from '../../../common/enums';
 
 export default class TopNavBar extends Component {
   static propTypes = {
@@ -75,7 +76,7 @@ export default class TopNavBar extends Component {
           <ChangeLanguage />
           <ProfileStyled>
             <ProfileImageStyled
-              src={avatar || '/assets/images/user.svg'}
+              src={avatar || DEFAULT_USER_AVATAR}
               onClick={this.onToggleUserInfo}
             />
             {isUserInfoOpen && (
@@ -92,7 +93,7 @@ export default class TopNavBar extends Component {
                 )}
               </Translation>
             </UserName>
-            <MenuStyled type="down" onClick={this.onToggleUserInfo} />
+            <MenuStyled type="caret-down" onClick={this.onToggleUserInfo} />
           </ProfileStyled>
         </TopbarRight>
       </TopNavBarWrapper>

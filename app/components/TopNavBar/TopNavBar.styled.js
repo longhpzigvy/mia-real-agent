@@ -180,6 +180,7 @@ export const UserName = styled.div.attrs({
 export const MenuStyled = styled(Icon).attrs({
   className: 'select-icon',
 })`
+  height: 40%;
   svg {
     color: ${props => props.theme.colorStyled.ColorBlackSecondary};
     font-size: 0.75em;

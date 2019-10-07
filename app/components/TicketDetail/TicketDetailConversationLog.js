@@ -23,7 +23,7 @@ export const conversationTranscript = (messages) => {
       case REPLY_TYPE.USER_NORMAL: {
         const { role } = ownerMessage;
         if (isAgent(role)) {
-          return otherChat(_id, contents, '/assets/images/user.svg');
+          return otherChat(_id, contents, ownerMessage.profile);
         }
         return userChat(_id, contents);
       }

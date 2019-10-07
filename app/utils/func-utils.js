@@ -4,11 +4,25 @@ import _isEmpty from 'lodash/isEmpty';
 import _eq from 'lodash/eq';
 import _keyBy from 'lodash/keyBy';
 import { Trans } from 'react-i18next';
-import { ROLES, REPLY_TYPE, TICKET_STATUS } from '../../common/enums';
+import {
+  ROLES, REPLY_TYPE, TICKET_STATUS, REPLY_TYPE_SORT,
+} from '../../common/enums';
+
+const compareMessage = (msgA, msgB) => {
+  const { sentAt: sentAtA, type: typeA } = msgA;
+  const { sentAt: sentAtB, type: typeB } = msgB;
+  const diff = compareDate(sentAtA, sentAtB);
+  if (diff !== 0) {
+    return diff;
+  }
+  return REPLY_TYPE_SORT[typeB] - REPLY_TYPE_SORT[typeA];
+};
 
 export const combineChat = (replyMessages = []) => {
   const combined = [];
-  replyMessages.sort(({ sentAt: a }, { sentAt: b }) => compareDate(a, b)).forEach((message) => {
+  replyMessages
+    .sort(compareMessage);
+  replyMessages.forEach((message) => {
     const {
       _id, from, type, params,
       messages = '', sentAt,

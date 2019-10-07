@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import moment from 'moment';
 import { Tooltip, Icon } from 'antd';
@@ -9,7 +10,7 @@ import {
   TicketActionStatus, UserAction, TicketActionStatusTitle,
   TicketRatingScore, CommentWrapper, UserLabelWarning,
 } from './styles';
-import { ROLES } from '../../../common/enums';
+import { ROLES, BOT_AVATAR, DEFAULT_USER_AVATAR } from '../../../common/enums';
 import { toI18n, isAgent } from '../../utils/func-utils';
 
 const renderTime = (time) => {
@@ -29,9 +30,9 @@ const renderTime = (time) => {
 export const userChat = (msgId, contents, isPending = false) => (
   <MessageBoxItem right key={msgId}>
     <MessageText>
-      {contents.map(({ _id, messages, sentAt }) => (
-        <Tooltip key={msgId} placement="right" title={renderTime(sentAt)}>
-          <UserMessage key={_id} pending={isPending}>
+      {contents.map(({ _id, messages, sentAt }, index) => (
+        <Tooltip key={`${_id}[${index}]`} placement="right" title={renderTime(sentAt)}>
+          <UserMessage pending={isPending}>
             {messages}
           </UserMessage>
         </Tooltip>
@@ -43,12 +44,12 @@ export const userChat = (msgId, contents, isPending = false) => (
 export const otherChat = (msgId, contents, profile) => (
   <MessageBoxItem left key={msgId}>
     <ProfileImageStyled
-      src={profile.avatar || '/assets/images/user.svg'}
+      src={profile.avatar || DEFAULT_USER_AVATAR}
     />
     <MessageText>
-      {contents.map(({ _id, messages, sentAt }) => (
-        <Tooltip key={msgId} placement="left" title={renderTime(sentAt)}>
-          <p key={_id}>
+      {contents.map(({ _id, messages, sentAt }, index) => (
+        <Tooltip key={`${_id}[${index}]`} placement="left" title={renderTime(sentAt)}>
+          <p>
             {messages}
           </p>
         </Tooltip>
@@ -60,12 +61,12 @@ export const otherChat = (msgId, contents, profile) => (
 export const botChat = (msgId, contents) => (
   <MessageBoxItem left key={msgId}>
     <ProfileImageStyled
-      src="/assets/images/mia-avatar.jpg"
+      src={BOT_AVATAR}
     />
     <MessageText>
-      {contents.map(({ _id, messages, sentAt }) => (
-        <Tooltip key={msgId} placement="left" title={renderTime(sentAt)}>
-          <p key={_id}>
+      {contents.map(({ _id, messages, sentAt }, index) => (
+        <Tooltip key={`${_id}[${index}]`} placement="left" title={renderTime(sentAt)}>
+          <p>
             {messages}
           </p>
         </Tooltip>
@@ -77,7 +78,7 @@ export const botChat = (msgId, contents) => (
 export const otherTyping = (messages, profile = {}) => (
   <MessageBoxItemIsTyping left key="UserTyping">
     <ProfileImageStyled
-      src={profile.avatar || '/assets/images/user.svg'}
+      src={profile.avatar || DEFAULT_USER_AVATAR}
     />
     <MessageText>
       <p>{messages.trim()}</p>

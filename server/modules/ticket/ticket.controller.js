@@ -155,6 +155,12 @@ class TicketController extends BaseController {
           type: REPLY_TYPE.TICKET_STATUS,
           params: { status: TICKET_STATUS.OPEN },
         });
+        // Mia bot automatic welcome
+        ReplyService.insert({
+          conversationId,
+          messages: 'Hello, How can I help you?',
+          type: REPLY_TYPE.BOT_RESPONSE,
+        });
       } catch (error) {
         this.service.delete(ticketId);
         throw new APIError('Unable to create ticket', httpStatus.INTERNAL_SERVER_ERROR);

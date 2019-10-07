@@ -30,8 +30,9 @@ export const ReceiptTableRow = styled(ReceiptRow)`
   ${props => props.grid && css`
     > div {
       border-right: 1px solid ${props.theme.colorStyled.ColorBorder};
-      margin-bottom: -4px;
+      /* margin-bottom: -4px; */
       padding: 16px;
+      margin-bottom: .2em;
     }
     > div:last-child{
       border-right: none;
@@ -40,7 +41,7 @@ export const ReceiptTableRow = styled(ReceiptRow)`
       margin-bottom: 0;
       border-bottom: none;
       :last-of-type{
-        margin-bottom: .2em;
+        margin-bottom: .4em;
         border-bottom: 1px solid ${props.theme.colorStyled.ColorBorder};
       }
   `}

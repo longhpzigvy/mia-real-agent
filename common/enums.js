@@ -200,6 +200,20 @@ export const REPLY_TYPE = {
   WARNING_ACTION: 'WARNING_ACTION',
 };
 
+export const BOT_AVATAR = '/assets/images/mia-avatar.jpg';
+export const DEFAULT_USER_AVATAR = '/assets/images/user.svg';
+
+export const REPLY_TYPE_SORT = {
+  USER_NORMAL: 0,
+  BOT_RESPONSE: 1,
+  USER_MISC: 'USER_MISC', // MEDIA, VIDEO, IMAGE, FILES, ETC
+  SYSTEM_NOTIFICATION: 2,
+  TICKET_STATUS: 3,
+  USER_ACTION: 4,
+  RATING_ACTION: 5,
+  WARNING_ACTION: 6,
+};
+
 export const REPLY_USER_ACTION = {
   ONLINE: 'Online',
   OFFLINE: 'Offline',

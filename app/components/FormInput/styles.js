@@ -164,7 +164,7 @@ export const InputWrapperStyled = styled(Form.Item)`
       box-shadow: none;
       /* border-radius: 3px !important;
       border: 1px solid #000 !important; */
-    }
+    } 
     &:hover {
       border-color: ${props => props.theme.colorStyled.ColorBlack};
     }
@@ -182,6 +182,7 @@ export const InputWrapperStyled = styled(Form.Item)`
     height: 26px!important;
     line-height: 26px;
     margin-top: 3px;
+    margin-left: 0!important;
   }
   .ant-select-selection-selected-value {
     ${props => props.mode === 'multiple' && {

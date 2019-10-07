@@ -1,17 +1,29 @@
 import React from 'react';
 import { shape } from 'prop-types';
 import Numeral from 'numeral';
-import { Divider } from 'antd';
 import {
   ReceiptWrapper, ReceiptRow, ReceiptCol, ReceiptTableRow,
 } from './styled';
 import { getHourMinutes, calculateChargeTime, toI18n } from '../../utils/func-utils';
 import { MIA_RATE, NUMERAL_MONEY_FORMAT } from '../../utils/constants';
 
+const TIME_TO_FORCE_UPDATE = 60000;
 class TicketReceipt extends React.Component {
   static propTypes = {
     ticket: shape().isRequired,
     user: shape().isRequired,
+  }
+
+  interval = null;
+
+  componentDidMount() {
+    this.interval = setInterval(() => {
+      this.forceUpdate();
+    }, TIME_TO_FORCE_UPDATE);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   renderReceiptRow = (item) => {

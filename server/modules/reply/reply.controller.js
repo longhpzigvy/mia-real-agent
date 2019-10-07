@@ -59,7 +59,7 @@ class ReplyController extends BaseController {
       const { ticketId } = await ConversationService.getOneByQuery({ _id: conversationId });
       // For processing time
       if (
-        noReply === 1 // Skip first status log
+        noReply === 2 // Skip first status log and welcome
       ) {
         TicketService.updateProcessingTime(ticketId);
       }

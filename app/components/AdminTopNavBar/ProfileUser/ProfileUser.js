@@ -15,6 +15,7 @@ import {
 } from './ProfileUser.styled';
 import { toI18n, isUser, isAgent } from '../../../utils/func-utils';
 import { NUMERAL_MONEY_FORMAT } from '../../../utils/constants';
+import { ROLES } from '../../../../common/enums';
 
 class ProfileUser extends React.PureComponent {
   renderUserAdditionalInformation = () => {
@@ -59,7 +60,7 @@ class ProfileUser extends React.PureComponent {
           <ProfileUserAction>
             {isUser(role) && this.renderUserAdditionalInformation()}
             {isAgent(role) && this.renderAgentAdditionalInformation()}
-            <Link to="/profile" className="my-account">{toI18n('DB_PROFILE_MY_ACCOUNT')}</Link>
+            {role !== ROLES.ADMIN && (<Link to="/profile" className="my-account">{toI18n('DB_PROFILE_MY_ACCOUNT')}</Link>)}
             <button className="sign-out" onClick={onLogout}>
               {toI18n('DB_PROFILE_SIGN_OUT')}
             </button>

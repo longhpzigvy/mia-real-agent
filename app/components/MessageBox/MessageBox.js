@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { EditorState } from 'draft-js';
 import {
   Form, Icon, Tooltip,
 } from 'antd';
 import _isEmpty from 'lodash/isEmpty';
-import { Translation } from 'react-i18next';
 import history from 'utils/history';
 import { Formik } from 'formik';
 import { Return } from 'components/Generals/General.styled';
@@ -16,8 +14,6 @@ import {
   MessageBoxContent,
   MessageBoxItem,
   ConversationHeaderTitle,
-  MessageInputWrapper,
-  MessageActionWrapper,
   MessageInput,
   MessageEmpty,
   InputAction,
@@ -37,31 +33,30 @@ import {
 } from './styles';
 import LoadingSpin from '../Loading';
 import ConversationDetail from '../ConversationDetail/ConversationDetail';
-import { REPLY_TYPE, CLOSED_TICKET_STATUSES, TICKET_STATUS } from '../../../common/enums';
+import {
+  REPLY_TYPE, CLOSED_TICKET_STATUSES,
+  TICKET_STATUS, BOT_AVATAR,
+} from '../../../common/enums';
 import FormInput from '../FormInput/FormInput';
 import {
   shouldShowSystemMessage, isAgent, toI18n, combineChat,
 } from '../../utils/func-utils';
 import {
-  userChat, otherChat, otherTyping, botChat, ticketStatus, userAction, ticketRating,
+  userChat, otherChat, otherTyping, botChat,
+  ticketStatus, userAction, ticketRating,
 } from '../ChatItem';
-import RichEditor from '../FormInput/RichEditor/RichEditor';
-import { clearEditorContent } from '../../api/utils';
 import { ButtonPrimary, ButtonDefault } from '../../stylesheets/Button.style';
 import CreateFeedbackForm from '../../containers/CreateFeedbackForm';
 import CloseTicketModal from './CloseTicketModal';
 import { ProfileImageStyled } from '../ChatItem/styles';
+import MessageInputForm from './MessageInputForm';
 
 const scrollStyle = {
   flex: 'auto',
   width: '100%',
 };
 
-const initialValues = {
-  content: EditorState.createEmpty(),
-};
-
-const rating = {
+const initialRating = {
   score: 1,
   comment: '',
 };
@@ -81,7 +76,6 @@ export default class MessageBox extends Component {
     isFindingAgent: PropTypes.bool,
     replyMessages: PropTypes.arrayOf(PropTypes.shape()),
     sendingMessages: PropTypes.arrayOf(PropTypes.shape()),
-    sendingMessageErrors: PropTypes.objectOf(PropTypes.any),
     otherUserTyping: PropTypes.object,
     fetchCannedResponseForUser: PropTypes.func.isRequired,
     findAgentRequest: PropTypes.func.isRequired,
@@ -108,7 +102,6 @@ export default class MessageBox extends Component {
   }
 
   state = {
-    content: EditorState.createEmpty(),
     feedbackFormIsOpen: false,
     closeTicketModalIsOpen: false,
     isOpenCreateModal: false,
@@ -128,7 +121,7 @@ export default class MessageBox extends Component {
 
   componentDidUpdate = (prevProps) => {
     const {
-      conversationId, replyMessages,
+      conversationId, replyMessages, otherUserTyping,
       currentConversation, setCurrentTicket, joinConversation, leftConversation,
     } = this.props;
     const { conversationId: prevConversationId } = prevProps;
@@ -153,30 +146,24 @@ export default class MessageBox extends Component {
   }
 
   renderFindAgentForSolution = () => (
-    <Translation>
-      {
-        t => (
-          <MessageBoxItem left key="solution">
-            <ProfileImageStyled
-              src="/assets/images/mia-avatar.jpg"
-            />
-            <FindAgentWrapper>
-              <p key="solution">
-                {t('CONV_MESSAGE_BOX_NOT_SATISFY')}
-              </p>
-              <FindAgentButton
-                key="button"
-                type="primary"
-                onClick={this.handleFindAgent}
-              >
-                <Icon type="search" />
-                {t('CONV_MESSAGE_BOX_FIND_AGENT')}
-              </FindAgentButton>
-            </FindAgentWrapper>
-          </MessageBoxItem>
-        )
-      }
-    </Translation>
+    <MessageBoxItem left key="solution">
+      <ProfileImageStyled
+        src={BOT_AVATAR}
+      />
+      <FindAgentWrapper>
+        <p key="solution">
+          {toI18n('CONV_MESSAGE_BOX_NOT_SATISFY')}
+        </p>
+        <FindAgentButton
+          key="button"
+          type="primary"
+          onClick={this.handleFindAgent}
+        >
+          <Icon type="search" />
+          {toI18n('CONV_MESSAGE_BOX_FIND_AGENT')}
+        </FindAgentButton>
+      </FindAgentWrapper>
+    </MessageBoxItem>
   )
 
   renderOtherUserMessageContent = (msgId, contents, from) => otherChat(msgId, contents, from.profile);
@@ -189,6 +176,7 @@ export default class MessageBox extends Component {
       && _id === conversationId
       && !_isEmpty(messages.trim())
     ) {
+      this.scrollChatToBottom();
       return otherTyping(messages, otherProfile);
     }
     return false;
@@ -203,25 +191,26 @@ export default class MessageBox extends Component {
     return [refinedMessages.map(({
       from, _id: msgId, contents, type, params, sentAt,
     }) => {
+      const id = `message[${msgId}]`;
       switch (type) {
         case REPLY_TYPE.TICKET_STATUS:
-          return ticketStatus(msgId, params, sentAt);
+          return ticketStatus(id, params, sentAt);
         case REPLY_TYPE.USER_ACTION:
-          return userAction(msgId, from, params, sentAt);
+          return userAction(id, from, params, sentAt);
         case REPLY_TYPE.BOT_RESPONSE:
-          return botChat(msgId, contents);
+          return botChat(id, contents);
         case REPLY_TYPE.RATING_ACTION:
-          return ticketRating(msgId, from, params, sentAt);
+          return ticketRating(id, from, params, sentAt);
         case REPLY_TYPE.USER_NORMAL:
           if (from._id === userId) {
-            return userChat(msgId, contents, false, isAgent(userRole));
+            return userChat(id, contents, false, isAgent(userRole));
           }
           if (!otherProfile) {
             this.setState({
               otherProfile: from.profile,
             });
           }
-          return this.renderOtherUserMessageContent(msgId, contents, from);
+          return this.renderOtherUserMessageContent(id, contents, from);
         default: return null;
       }
     }),
@@ -236,31 +225,14 @@ export default class MessageBox extends Component {
     return combineChat(sendingMessages).map(({ id: msgId, contents }) => userChat(msgId, contents, true));
   }
 
-  renderGroupAction = () => (
-    <MessageActionWrapper>
-      <InputAction className="mia-gallery" htmlFor="file-upload" />
-      <InputAction className="mia-folder" htmlFor="file-upload" />
-      <InputAction className="mia-camera" />
-      <InputAction className="mia-happiness" />
-      {/* <InputUpload type="file" id="file-upload" /> */}
-    </MessageActionWrapper>
-  );
-
-  handleChatSubmit = () => {
+  handleChatSubmit = (content) => {
     const {
       sendReplyMessage, conversationId, userTyping, userRole,
     } = this.props;
-    const { content } = this.state;
-    const trimmedContent = content.getCurrentContent().getPlainText().trim();
-    if (trimmedContent) {
-      sendReplyMessage(conversationId, trimmedContent);
-      if (!isAgent(userRole)) {
-        userTyping(conversationId, '');
-      }
-      this.formik.getFormikContext().resetForm();
-      this.setState({
-        content: clearEditorContent(content),
-      });
+    sendReplyMessage(conversationId, content);
+    this.scrollChatToBottom();
+    if (!isAgent(userRole)) {
+      userTyping(conversationId, '');
     }
   }
 
@@ -282,41 +254,17 @@ export default class MessageBox extends Component {
   }
 
   handleChangeContent = (content) => {
-    this.setState({
-      content,
-    });
     this.handleTyping(content);
   }
 
   renderMessageInput = () => {
     const { cannedResponses } = this.props;
-    const { content } = this.state;
     return (
-      <Formik
-        ref={(formik) => { this.formik = formik; }}
-        initialValues={initialValues}
+      <MessageInputForm
+        cannedResponses={cannedResponses}
         onSubmit={this.handleChatSubmit}
-      >
-        {({ handleSubmit }) => (
-          <Form
-            onSubmit={handleSubmit}
-          >
-            <MessageInputWrapper>
-              <RichEditor
-                mentions={cannedResponses.map(({ shortcut: title, content: name }) => ({
-                  title,
-                  name,
-                }))}
-                onChange={this.handleChangeContent}
-                editorState={content}
-                handleReturn={handleSubmit}
-              />
-              {this.renderGroupAction()}
-              <InputAction onClick={handleSubmit} className="mia-enter" />
-            </MessageInputWrapper>
-          </Form>
-        )}
-      </Formik>
+        onChangeContent={this.handleChangeContent}
+      />
     );
   }
 
@@ -394,7 +342,7 @@ export default class MessageBox extends Component {
         </h2>
         <Formik
           ref={(formik) => { this.ratingFormik = formik; }}
-          initialValues={rating}
+          initialValues={initialRating}
           onSubmit={this.handleSubmitRating}
         >
           {({ handleSubmit }) => (
@@ -459,8 +407,8 @@ export default class MessageBox extends Component {
             && this.renderFindAgentForSolution()}
           {this.renderPendingMessageContent()}
           <MessageBoxBlock />
-          {CLOSED_TICKET_STATUSES.includes(status) && !rating &&
-            [
+          {CLOSED_TICKET_STATUSES.includes(status) && !rating
+            && [
               (<MessageBoxBlock />),
               (<MessageBoxBlock />),
               (<MessageBoxBlock />),

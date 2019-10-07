@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { getUserId, getUserRole } from 'reducers/auth';
-import { withTranslation } from 'react-i18next';
 import { actions as cannedResponseActions } from 'reducers/cannedResponse';
 import {
   isFetchingReplies,
@@ -69,4 +68,4 @@ const mapDispatchToProps = {
   closeTicket: actions.closeAction,
 };
 
-export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(MessageBox));
+export default connect(mapStateToProps, mapDispatchToProps)(MessageBox);
