@@ -2,6 +2,7 @@ import React from 'react';
 import { shape } from 'prop-types';
 import Numeral from 'numeral';
 import { Divider } from 'antd';
+import moment from 'moment';
 import {
   ReceiptWrapper, ReceiptRow, ReceiptCol,
 } from './styled';
@@ -9,10 +10,26 @@ import { getHourMinutes, toI18n, calculateStatusTime } from '../../utils/func-ut
 import { NUMERAL_MONEY_FORMAT } from '../../utils/constants';
 import { TICKET_STATUS } from '../../../common/enums';
 
+const TIME_TO_FORCE_UPDATE = 60000;
+
 class TicketReceipt extends React.PureComponent {
   static propTypes = {
     ticket: shape().isRequired,
     user: shape().isRequired,
+  }
+
+  componentDidMount() {
+    const initTimeOut = TIME_TO_FORCE_UPDATE - moment().diff(moment().startOf('minute'));
+    setTimeout(() => {
+      this.interval = setInterval(() => {
+        this.forceUpdate();
+      }, TIME_TO_FORCE_UPDATE);
+    }, initTimeOut);
+  }
+
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   render() {

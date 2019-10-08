@@ -168,10 +168,9 @@ export const calculateChargeTime = (ticket, user) => {
   const processingTime = calculateStatusTime(history, [TICKET_STATUS.PROCESSING]);
   const { creditTime: userCreditTime } = user;
   // Calculate Used Credit Time
-  const remainingOpeningTime = openingTime - userCreditTime;
-  let remainingCreditTime = (userCreditTime - openingTime >= 0)
-    ? userCreditTime - openingTime : 0;
-  const remainingProcessingTime = processingTime - remainingCreditTime;
+  const remainingOpeningTime = Math.max(0, openingTime - userCreditTime);
+  let remainingCreditTime = Math.max(0, userCreditTime - openingTime);
+  const remainingProcessingTime = Math.max(0, processingTime - remainingCreditTime);
   if (remainingCreditTime > 0) {
     remainingCreditTime = (remainingCreditTime - processingTime > 0)
       ? remainingCreditTime - processingTime : 0;

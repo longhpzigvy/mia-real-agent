@@ -14,6 +14,11 @@ export const AvatarWrapper = styled.div`
   }
   .ant-upload.ant-upload-select-picture-card > .ant-upload{
     padding-bottom: 3px;
+    width: 128px;
+    height: 128px;
+  }
+  img {
+    height: 100%;
   }
 `;
 

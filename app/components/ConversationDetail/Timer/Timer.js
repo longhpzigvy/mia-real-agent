@@ -27,9 +27,12 @@ class TimerWrapper extends React.PureComponent {
   interval = null;
 
   componentDidMount() {
-    this.interval = setInterval(() => {
-      this.forceUpdate();
-    }, TIME_TO_FORCE_UPDATE);
+    const initTimeOut = TIME_TO_FORCE_UPDATE - moment().diff(moment().startOf('minute'));
+    setTimeout(() => {
+      this.interval = setInterval(() => {
+        this.forceUpdate();
+      }, TIME_TO_FORCE_UPDATE);
+    }, initTimeOut);
   }
 
   componentWillUnmount() {

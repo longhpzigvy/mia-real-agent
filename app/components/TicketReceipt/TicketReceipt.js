@@ -1,6 +1,7 @@
 import React from 'react';
 import { shape } from 'prop-types';
 import Numeral from 'numeral';
+import moment from 'moment';
 import {
   ReceiptWrapper, ReceiptRow, ReceiptCol, ReceiptTableRow,
 } from './styled';
@@ -16,11 +17,16 @@ class TicketReceipt extends React.Component {
 
   interval = null;
 
+
   componentDidMount() {
-    this.interval = setInterval(() => {
-      this.forceUpdate();
-    }, TIME_TO_FORCE_UPDATE);
+    const initTimeOut = TIME_TO_FORCE_UPDATE - moment().diff(moment().startOf('minute'));
+    setTimeout(() => {
+      this.interval = setInterval(() => {
+        this.forceUpdate();
+      }, TIME_TO_FORCE_UPDATE);
+    }, initTimeOut);
   }
+
 
   componentWillUnmount() {
     clearInterval(this.interval);
