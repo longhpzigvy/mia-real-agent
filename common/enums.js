@@ -52,9 +52,10 @@ export const COLOR_BY_STATUS = {
   Open: '#449bea',
   Solved: '#d4101e',
   Unsolved: '#d4101e',
-  Pending: '#e5cc94',
+  Pending: '#449bea',
   Processing: '#05ca05',
   Idle: '#f7d00f',
+  'Requested Change': '#ff5402',
   Offline: '#8e8e8e',
   Approved: '#05ca05',
   Rejected: '#b52d2d',
@@ -163,6 +164,7 @@ export const APPLICATION_STATUS = {
   PENDING: 'Pending',
   REJECTED: 'Rejected',
   REVIEWING: 'Reviewing',
+  REQUESTED_CHANGE: 'Requested Change',
   APPROVED: 'Approved',
 };
 
@@ -196,6 +198,20 @@ export const REPLY_TYPE = {
   USER_ACTION: 'USER_ACTION',
   RATING_ACTION: 'RATING_ACTION',
   WARNING_ACTION: 'WARNING_ACTION',
+};
+
+export const BOT_AVATAR = '/assets/images/mia-avatar.jpg';
+export const DEFAULT_USER_AVATAR = '/assets/images/user.svg';
+
+export const REPLY_TYPE_SORT = {
+  USER_NORMAL: 0,
+  BOT_RESPONSE: 1,
+  USER_MISC: 'USER_MISC', // MEDIA, VIDEO, IMAGE, FILES, ETC
+  SYSTEM_NOTIFICATION: 2,
+  TICKET_STATUS: 3,
+  USER_ACTION: 4,
+  RATING_ACTION: 5,
+  WARNING_ACTION: 6,
 };
 
 export const REPLY_USER_ACTION = {
@@ -643,4 +659,37 @@ export const FEEDBACK_STATUS = {
 export const BILLING_TYPE = {
   TOPUP: 'Top-up',
   TICKET_CHARGE: 'Ticket Charge',
+  TICKET_FULFILL: 'Ticket Fulfill',
+};
+
+export const LANGUAGE_OPTIONS = [
+  {
+    label: APPLICATION_LANGUAGE.CHINESE,
+    value: APPLICATION_LANGUAGE.CHINESE,
+  },
+  {
+    label: APPLICATION_LANGUAGE.ENGLISH,
+    value: APPLICATION_LANGUAGE.ENGLISH,
+  },
+  {
+    label: APPLICATION_LANGUAGE.JANPANESE,
+    value: APPLICATION_LANGUAGE.JANPANESE,
+  },
+  {
+    label: APPLICATION_LANGUAGE.VIETNAMESE,
+    value: APPLICATION_LANGUAGE.VIETNAMESE,
+  },
+];
+
+export const MARKS = {
+  1: '1',
+  2: '2',
+  3: '3',
+  4: '4',
+  5: '5',
+};
+
+export const REVIEW_STATUS = {
+  CLOSED: 'closed',
+  OPEN: 'open',
 };

@@ -10,17 +10,18 @@ import {
 } from './ApplicationUserSummary.styled';
 import ApplicationSummary from '../ApplicationSummary';
 import UserSummary from '../UserSummary';
+import { toI18n } from '../../../utils/func-utils';
 
 const ApplicationUserSummary = ({ applicationSummary, userSummary }) => (
   <TicketActivityWrapper>
     <TicketActivityLeftItem>
       <TicketActivityTitle>
-        Applications Summary
+        {toI18n('ADMIN_DASHBOARD_APPLICATIONS_SUMMARY')}
       </TicketActivityTitle>
       <ApplicationSummary applicationSummary={applicationSummary} />
     </TicketActivityLeftItem>
     <TicketActivityRightItem>
-      <TicketActivityTitle>Users Summary</TicketActivityTitle>
+      <TicketActivityTitle>{toI18n('ADMIN_DASHBOARD_USERS_SUMMARY')}</TicketActivityTitle>
       <UserSummary userSummary={userSummary} />
     </TicketActivityRightItem>
   </TicketActivityWrapper>

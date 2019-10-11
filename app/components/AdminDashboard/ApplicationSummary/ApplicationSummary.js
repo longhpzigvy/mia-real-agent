@@ -3,12 +3,13 @@ import { shape } from 'prop-types';
 import {
   TicketActivityQuantityGroup, TicketActivityQuantityItem, TicketActivityQuantityContent, TicketActivityQuantityNumber
 } from './ApplicationSummary.styled';
+import { toI18n } from '../../../utils/func-utils';
 
 const ApplicationSummary = ({ applicationSummary: { pending = 0, reviewing = 0 } }) => (
   <TicketActivityQuantityGroup>
     <TicketActivityQuantityItem>
       <TicketActivityQuantityContent>
-        Waiting for review
+        {toI18n('ADMIN_DASHBOARD_WAITING_FOR_REVIEW')}
       </TicketActivityQuantityContent>
       <TicketActivityQuantityNumber>
         {pending}
@@ -17,7 +18,7 @@ const ApplicationSummary = ({ applicationSummary: { pending = 0, reviewing = 0 }
 
     <TicketActivityQuantityItem>
       <TicketActivityQuantityContent>
-        Reviewing
+        {toI18n('ADMIN_DASHBOARD_REVIEWING')}
       </TicketActivityQuantityContent>
       <TicketActivityQuantityNumber>
         {reviewing}

@@ -13,7 +13,7 @@ import {
 import LoadingSpin from '../Loading';
 import ProfileDetail from './ProfileDetail/ProfileDetail';
 
-import { toI18n } from '../../utils/func-utils';
+import { toI18n, isAgent } from '../../utils/func-utils';
 import ProfileBasicInfo from './ProfileBasicInfo';
 import BillingManagement from '../../containers/BillingManagement';
 const { TabPane } = Tabs;
@@ -66,6 +66,7 @@ export default class Profile extends Component {
 
   render() {
     const { isFetching, user } = this.props;
+    const { role } = user;
     return (
       <ProfileWrapper>
         <ProfileCard>
@@ -77,16 +78,16 @@ export default class Profile extends Component {
                   <ProfileBasicInfo user={user} />
                 </ProfileContentWrapper>
               </TabPane>
-              <TabPane tab={toI18n('PROFILE_PAYMENT_INFO_BILLING_INFO')} key="2">
+              {true && [(<TabPane tab={toI18n('PROFILE_PAYMENT_INFO_BILLING_INFO')} key="2">
                 <ProfileContentWrapper>
                   <BillingManagement noHeader />
                 </ProfileContentWrapper>
-              </TabPane>
-              <TabPane tab={toI18n('PROFILE_PAYMENT_INFO_PAYMENT_INFO')} key="3">
+              </TabPane>),
+              (<TabPane tab={toI18n('PROFILE_PAYMENT_INFO_PAYMENT_INFO')} key="3">
                 <ProfileContentWrapper>
                   <AddCreditCard user={user} />
                 </ProfileContentWrapper>
-              </TabPane>
+              </TabPane>)]}
             </Tabs>
           </LoadingSpin>
         </ProfileCard>

@@ -13,7 +13,13 @@ const billingSchema = new Schema(
       enum: [
         BILLING_TYPE.TOPUP,
         BILLING_TYPE.TICKET_CHARGE,
+        BILLING_TYPE.TICKET_FULFILL,
       ],
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
     },
     content: {
       type: Object,

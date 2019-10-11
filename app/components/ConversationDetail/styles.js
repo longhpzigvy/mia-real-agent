@@ -152,18 +152,7 @@ export const ConversationHeaderWrapper = styled.div`
       display: none;
     }
   `};
-  @media (max-width: 1024px) {
-    padding: 15px;
-  }
-  @media (max-width: 840px) {
-    justify-content: center;
-    .anticon-edit, span {
-      display: none;
-    }
-  }
 `;
-
-
 
 export const ConversationGroup = styled.div`
   flex: 1;

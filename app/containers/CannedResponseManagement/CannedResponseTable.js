@@ -18,7 +18,7 @@ const userColumns = [
     dataKey: 'shortcut',
     columnAttr: {
       value: toI18n('CANNED_RESPONSE_ADMIN_SHORTCUT'),
-      percent: '20',
+      percent: 20,
     },
   },
   {
@@ -26,6 +26,24 @@ const userColumns = [
     dataKey: 'content',
     columnAttr: {
       value: toI18n('CANNED_RESPONSE_ADMIN_CONTENT'),
+      percent: 20,
+    },
+  },
+  {
+    type: COLUMN_TYPE.ACTIONS,
+    actions: [
+      {
+        action: 'onClickRow',
+        type: 'edit',
+      },
+      {
+        action: 'removeCannedResponse',
+        type: 'delete',
+      },
+    ],
+    columnAttr: {
+      value: toI18n('ADMIN_APPLICATION_TABLE_ACTIONS'),
+      percent: 10,
     },
   },
 ];
@@ -33,6 +51,7 @@ const userColumns = [
 const mapDispatchToProps = {
   fetchList: actions.fetchListCannedResponse,
   changePage: actions.changePage,
+  removeCannedResponse: actions.removeCannedResponse,
 };
 
 const structureSelectorFunc = createStructuredSelector({

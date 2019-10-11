@@ -105,6 +105,9 @@ export const MessageBoxSystemNotification = styled.span`
   color: #828282;
   opacity: .7;
   font-style: italic;
+  :first-of-type{
+    margin-top: 1em;
+  }
 `;
 export const LineDivider = styled.span`
     display: flex;
@@ -144,7 +147,8 @@ export const IsTypingWrapper = styled.div`
 `;
 
 export const ProfileImageStyled = styled.img`
-  height: 35px;
+  height: 2.2em;
+  width: 2.2em;
   cursor: pointer;
   border-radius: 100%;
 `;

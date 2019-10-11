@@ -14,6 +14,8 @@ import {
   TicketActivityPurpose,
 } from './TicketActivity.styled';
 import TicketDetailStatistic from './TicketDetailStatistic';
+import { toI18n } from '../../../utils/func-utils';
+import { COLOR_BY_STATUS, TICKET_STATUS } from '../../../../common/enums';
 
 
 class TicketActivity extends Component {
@@ -33,33 +35,39 @@ class TicketActivity extends Component {
   renderTicketActivitySummary = () => {
     const { ticketActivity } = this.props;
     const {
-      resolved = 0, pending = 0, processing = 0, closed = 0,
+      solved = 0, unsolved = 0, pending = 0, processing = 0, idle = 0,
     } = ticketActivity;
     return (
       <TicketActivityGroupItem>
         {this.renderActivityItem({
-          number: resolved,
+          number: solved,
           unit: 'Qty',
-          color: '#1093de',
-          title: 'Tickets Resolved',
+          color: COLOR_BY_STATUS.Solved,
+          title: TICKET_STATUS.SOLVED,
+        })}
+        {this.renderActivityItem({
+          number: unsolved,
+          unit: 'Qty',
+          color: COLOR_BY_STATUS.Unsolved,
+          title: TICKET_STATUS.UNSOLVED,
         })}
         {this.renderActivityItem({
           number: pending,
           unit: 'Qty',
-          color: '#db3f26',
-          title: 'Tickets Pending',
+          color: COLOR_BY_STATUS.Pending,
+          title: TICKET_STATUS.PENDING,
         })}
         {this.renderActivityItem({
           number: processing,
           unit: 'Qty',
-          color: '#388a10',
-          title: 'Tickets Processing',
+          color: COLOR_BY_STATUS.Processing,
+          title: TICKET_STATUS.PROCESSING,
         })}
         {this.renderActivityItem({
-          number: closed,
+          number: idle,
           unit: 'Qty',
-          color: '#f4a204',
-          title: 'Tickets Closed',
+          color: COLOR_BY_STATUS.Idle,
+          title: TICKET_STATUS.IDLE,
         })}
       </TicketActivityGroupItem>
     );
@@ -71,12 +79,12 @@ class TicketActivity extends Component {
       <TicketActivityWrapper>
         <TicketActivityLeftItem>
           <TicketActivityTitle>
-            Tickets Activity
+            {toI18n('ADMIN_DASHBOARD_TICKETS_ACTIVITY')}
           </TicketActivityTitle>
           {this.renderTicketActivitySummary()}
         </TicketActivityLeftItem>
         <TicketActivityRightItem>
-          <TicketActivityTitle>Tickets Detail</TicketActivityTitle>
+          <TicketActivityTitle>{toI18n('ADMIN_DASHBOARD_TICKETS_DETAIL')}</TicketActivityTitle>
           <TicketDetailStatistic ticketActivity={ticketActivity} />
         </TicketActivityRightItem>
       </TicketActivityWrapper>

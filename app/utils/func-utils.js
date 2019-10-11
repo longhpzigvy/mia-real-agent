@@ -4,11 +4,25 @@ import _isEmpty from 'lodash/isEmpty';
 import _eq from 'lodash/eq';
 import _keyBy from 'lodash/keyBy';
 import { Trans } from 'react-i18next';
-import { ROLES, REPLY_TYPE } from '../../common/enums';
+import {
+  ROLES, REPLY_TYPE, TICKET_STATUS, REPLY_TYPE_SORT,
+} from '../../common/enums';
+
+const compareMessage = (msgA, msgB) => {
+  const { sentAt: sentAtA, type: typeA } = msgA;
+  const { sentAt: sentAtB, type: typeB } = msgB;
+  const diff = compareDate(sentAtA, sentAtB);
+  if (diff !== 0) {
+    return diff;
+  }
+  return REPLY_TYPE_SORT[typeB] - REPLY_TYPE_SORT[typeA];
+};
 
 export const combineChat = (replyMessages = []) => {
   const combined = [];
-  replyMessages.sort(({ sentAt: a }, { sentAt: b }) => compareDate(a, b)).forEach((message) => {
+  replyMessages
+    .sort(compareMessage);
+  replyMessages.forEach((message) => {
     const {
       _id, from, type, params,
       messages = '', sentAt,
@@ -65,6 +79,10 @@ export function isAgent(role) {
   return role === ROLES.FREELANCER || role === ROLES.DEDICATED;
 }
 
+export function isUser(role) {
+  return role === ROLES.BUSINESS || role === ROLES.INDIVIDUAL;
+}
+
 export function shouldShowSystemMessage(systemMessage, currentConversationId) {
   if (_isEmpty(systemMessage)) {
     return false;
@@ -77,7 +95,7 @@ export function shouldShowSystemMessage(systemMessage, currentConversationId) {
 }
 
 export const toI18n = key => (
-  <Trans i18nKey={key} />
+  <Trans i18nKey={key} defaults={`[${key}]`} />
 );
 
 const sortTicketHistory = history => (history || [])
@@ -118,3 +136,52 @@ export const flatApplicationForm = (application, mapping) => _keyBy(
     };
   }), 'key'
 );
+
+export const generateInitValue = (type) => {
+  switch (type) {
+    case 'slider':
+    case 'number':
+      return 0;
+    case 'select':
+    case 'upload':
+    case 'list':
+      return [];
+    case 'checkbox':
+      return false;
+    case 'text':
+      return '';
+    default:
+      return null;
+  }
+};
+
+export const calculateChargeTime = (ticket, user) => {
+  const {
+    processingDate, history,
+  } = ticket;
+  // Calculate Ticket Time
+  const firstOpen = history[0];
+  const timeBeforeChat = moment(firstOpen.startTime).diff(
+    moment(processingDate), 'minutes'
+  );
+  const openingTime = timeBeforeChat + calculateStatusTime(history, [TICKET_STATUS.OPEN]);
+  const processingTime = calculateStatusTime(history, [TICKET_STATUS.PROCESSING]);
+  const { creditTime: userCreditTime } = user;
+  // Calculate Used Credit Time
+  const remainingOpeningTime = Math.max(0, openingTime - userCreditTime);
+  let remainingCreditTime = Math.max(0, userCreditTime - openingTime);
+  const remainingProcessingTime = Math.max(0, processingTime - remainingCreditTime);
+  if (remainingCreditTime > 0) {
+    remainingCreditTime = (remainingCreditTime - processingTime > 0)
+      ? remainingCreditTime - processingTime : 0;
+  }
+  return {
+    timeBeforeChat,
+    openingTime,
+    processingTime,
+    remainingOpeningTime,
+    remainingProcessingTime,
+    userCreditTime,
+    remainingCreditTime,
+  };
+};

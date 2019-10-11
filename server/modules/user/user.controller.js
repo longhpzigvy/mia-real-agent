@@ -222,7 +222,9 @@ class UserController extends BaseController {
     try {
       const { model: user } = req;
       const { cardId, amount } = req.body;
-      const { stripeCustomerId, creditTime, creditCard } = user;
+      const {
+        stripeCustomerId, creditTime, creditCard, _id: userId,
+      } = user;
       const result = creditCard.find(({ _id }) => _id.toString() === cardId);
       if (result && stripeCustomerId) {
         await StripeService.createCharge(stripeCustomerId, result.apiKey, amount * 100, 'Topup');
@@ -234,6 +236,7 @@ class UserController extends BaseController {
       user.set({ creditTime: +creditTime + (amount * exchangeRate) });
       await user.save();
       await BillingService.topUpBilling(
+        userId,
         {
           creditTime,
           cardId,

@@ -12,16 +12,13 @@ import {
   AdditionalInformationWrapper,
   AdditionalInformationTitle,
   AdditionalInformationValue,
-  LanguageWrapper,
-  LanguageRadio,
-  LanguageRadioWrapper,
 } from './ProfileUser.styled';
-import { toI18n } from '../../../utils/func-utils';
+import { toI18n, isUser, isAgent } from '../../../utils/func-utils';
+import { NUMERAL_MONEY_FORMAT } from '../../../utils/constants';
 import { ROLES } from '../../../../common/enums';
-import { LNG_CODE } from '../../../utils/constants';
 
 class ProfileUser extends React.PureComponent {
-  renderAdditionalInformation = () => {
+  renderUserAdditionalInformation = () => {
     const { profile } = this.props;
     const { creditTime } = profile;
     return (
@@ -36,26 +33,18 @@ class ProfileUser extends React.PureComponent {
     );
   }
 
-  renderSelectLanguage = () => {
-    const { lngCode, changeLanguage } = this.props;
+  renderAgentAdditionalInformation = () => {
+    const { profile } = this.props;
+    const { credit } = profile;
     return (
-      <LanguageWrapper>
-        {toI18n('NAVBAR_PROFILE_LANGUAGE')}
-        <LanguageRadioWrapper>
-          <LanguageRadio
-            active={lngCode === LNG_CODE.EN}
-            onClick={() => changeLanguage(LNG_CODE.EN)}
-          >
-            {toI18n('NAVBAR_PROFILE_EN')}
-          </LanguageRadio>
-          <LanguageRadio
-            active={lngCode === LNG_CODE.VN}
-            onClick={() => changeLanguage(LNG_CODE.VN)}
-          >
-            {toI18n('NAVBAR_PROFILE_VN')}
-          </LanguageRadio>
-        </LanguageRadioWrapper>
-      </LanguageWrapper>
+      <AdditionalInformationWrapper>
+        <AdditionalInformationTitle>
+          {toI18n('NAVBAR_PROFILE_CREDIT')}
+        </AdditionalInformationTitle>
+        <AdditionalInformationValue>
+          {numeral(credit).format(NUMERAL_MONEY_FORMAT)}
+        </AdditionalInformationValue>
+      </AdditionalInformationWrapper>
     );
   }
 
@@ -69,9 +58,9 @@ class ProfileUser extends React.PureComponent {
       <ProfileUserInfoWrapper>
         <ProfileUserHead>
           <ProfileUserAction>
-            {this.renderSelectLanguage()}
-            {role !== ROLES.ADMIN && this.renderAdditionalInformation()}
-            <Link to="/profile" className="my-account">{toI18n('DB_PROFILE_MY_ACCOUNT')}</Link>
+            {isUser(role) && this.renderUserAdditionalInformation()}
+            {isAgent(role) && this.renderAgentAdditionalInformation()}
+            {role !== ROLES.ADMIN && (<Link to="/profile" className="my-account">{toI18n('DB_PROFILE_MY_ACCOUNT')}</Link>)}
             <button className="sign-out" onClick={onLogout}>
               {toI18n('DB_PROFILE_SIGN_OUT')}
             </button>
@@ -84,9 +73,7 @@ class ProfileUser extends React.PureComponent {
 
 ProfileUser.propTypes = {
   onLogout: PropTypes.func,
-  changeLanguage: PropTypes.func,
   profile: PropTypes.shape(),
-  lngCode: PropTypes.string,
 };
 
 export default ProfileUser;

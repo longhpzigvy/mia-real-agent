@@ -9,6 +9,7 @@ const en = {
     CLOSE: 'Close',
     CANCEL: 'Cancel',
     CLICK_HERE: 'Click here!',
+    ADD: 'Add ',
     // Form
     FORM_BACK: 'Back',
     FORM_NEXT: 'Next',
@@ -28,6 +29,8 @@ const en = {
     FORM_REQUIRED: 'Required',
     FORM_INVALID_MAIL: 'Invalid Email',
     FORM_PASSWORD_MUST_MATCH: 'Passwords must match',
+    FORM_PASSWORD_FROM_CANNOT_EXCEED_TO: 'From cannot exceed To',
+    FORM_PASSWORD_TO_CANNOT_LOWER_FORM: 'To cannot lower Form',
     // Form input
     FORM_INPUT_UPLOAD_PLACEHOLDER: 'Upload',
     FORM_INPUT_UPLOAD_MAX_SIZE: 'Upload file cannot exceed 10MB',
@@ -296,6 +299,9 @@ const en = {
     ADMIN_TICKET_WARNING_DETAIL_SELECT_TICKET: 'PLease select ticket',
     ADMIN_TICKET_WARNING_DETAIL_VIOLATION_MESSAGES: 'Violation Messages:',
     ADMIN_TICKET_WARNING_DETAIL_CONTACT_AGENT: 'Contact Agent',
+    ADMIN_TICKET_WARNING_TABLE_FROM: 'Username',
+    ADMIN_TICKET_WARNING_TABLE_SEND_AT: 'Send At',
+    ADMIN_TICKET_WARNING_TABLE_MESSAGES: 'Message',
     // Admin feedback detail
     ADMIN_TICKET_DETAIL_ALL_FEEDBACKS: 'All Feedbacks',
     ADMIN_FEEDBACK_DETAIL_PRIMARY_DETAILS: 'Feedback Details',
@@ -321,7 +327,13 @@ const en = {
     ADMIN_RESPONSE_EDIT_TITLE: 'Edit Response for',
     ADMIN_RESPONSE_EDIT_SUCCESS: 'Response Editted',
     ADMIN_RESPONSE_REMOVE_SUCCESS: 'Response Removed',
-
+    // Admin dashboard
+    ADMIN_DASHBOARD_TICKETS_ACTIVITY: 'Tickets Activity',
+    ADMIN_DASHBOARD_TICKETS_DETAIL: 'Tickets Detail',
+    ADMIN_DASHBOARD_APPLICATIONS_SUMMARY: 'Applications Summary',
+    ADMIN_DASHBOARD_USERS_SUMMARY: 'Users Summary',
+    ADMIN_DASHBOARD_WAITING_FOR_REVIEW: 'Waiting for review',
+    ADMIN_DASHBOARD_REVIEWING: 'Reviewing',
     // Profile
     PROFILE_MISSING_USER_ID: 'Missing userId',
     PROFILE_USERNAME: 'Username',
@@ -375,12 +387,13 @@ const en = {
     CREDIT_REMOVE_SUCCESS: 'Card Removed from account',
     // Navbar profile
     NAVBAR_PROFILE_CREDIT_TIME: 'Credit time',
+    NAVBAR_PROFILE_CREDIT: 'Credit',
     NAVBAR_PROFILE_LANGUAGE: 'Language',
-    NAVBAR_PROFILE_EN: 'EN',
-    NAVBAR_PROFILE_VN: 'VN',
+    NAVBAR_PROFILE_EN: 'English',
+    NAVBAR_PROFILE_VN: 'Vietnamese',
     // Close Ticket Modal
     CLOSE_TICKET_MODAL_CLOSED_STATUS: 'Closed Status',
-    CLOSE_TICKET_MODAL_UNSOLVED_REASON: 'Unsolved Reason',
+    CLOSE_TICKET_MODAL_UNSOLVED_REASON: 'Unsolved Reason(*)',
     CLOSE_TICKET_MODAL_CLOSE_TICKET: 'Close Ticket',
 
     // Canned Response Admin
@@ -441,6 +454,7 @@ const en = {
     BILLING_INFO_ROW_VALUE: 'Value',
     BILLING_INFO_ROW_TOPUP: 'Top-up',
     BILLING_INFO_ROW_TIME_FOR_TICKET: 'Time for ticket',
+    BILLING_INFO_ROW_CREDIT_FOR_TICKET: 'Credit for ticket',
     BILLING_INFO_ROW_CHARGED_FOR_TICKET: 'Charged for ticket',
     // APPLICATION REVIEW
     APPLICATION_REVIEW_REQUEST_CHANGE: 'Request Change',
@@ -456,6 +470,7 @@ const en = {
     APPLICATION_REVIEW_FORM_COUNTRY: 'Country',
     APPLICATION_REVIEW_FORM_POSTCODE: 'Postcode',
     APPLICATION_REVIEW_FORM_ADDRESS: 'Address',
+    APPLICATION_REVIEW_FORM_PHONE: 'Phone No.',
     APPLICATION_REVIEW_FORM_CV: 'CV',
     APPLICATION_REVIEW_FORM_CATEGORIES: 'Categories',
     APPLICATION_REVIEW_FORM_SKILLS: 'Skills',
@@ -478,6 +493,22 @@ const en = {
     APPLICATION_REVIEW_FORM_LIST_SPEAKING: 'Speaking',
     APPLICATION_REVIEW_FORM_LIST_OVERALL: 'Overall',
     APPLICATION_REVIEW_FORM_PENDING_CHANGE: 'Are you sure cancel Review this application?',
+    // REQUEST CHANGE
+    REQUEST_CHANGE_LOGO: 'APPLICATION UPDATE',
+    // TICKET RECEIPT
+    TICKET_RECEIPT_TITLE: 'Ticket Receipt',
+    TICKET_RECEIPT_CHARGE_TIME: 'Charge Time',
+    TICKET_RECEIPT_RATE: 'Rate',
+    TICKET_RECEIPT_MIA: 'MIA',
+    TICKET_RECEIPT_AGENT: 'Agent',
+    TICKET_RECEIPT_AGENT_TIME: 'Time for Agent',
+    TICKET_RECEIPT_AGENT_CREDIT: 'Agent Added Credit',
+    TICKET_RECEIPT_TOTAL: 'Total',
+    TICKET_RECEIPT_SUBTOTAL: 'Subtotal',
+    TICKET_RECEIPT_PAID: 'Paid',
+    TICKET_RECEIPT_REMAIN: 'Remaining Credit time',
+    TICKET_RECEIPT_BOT_FEE: 'Charge for MIA',
+    TICKET_RECEIPT_AGENT_FEE: 'Charge for Agent',
   },
 };
 

@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { shape, arrayOf, func } from 'prop-types';
-import { Tabs, Button, Icon } from 'antd';
+import { Col } from 'antd';
 import {
   ResponseItemWrapper, ResponseParameterWrapper,
-  ResponseValueWrapper, ResponseActionWrapper, ParameterWrapper, ParameterTitle, ParameterValue,
+  ResponseValueWrapper, ResponseActionWrapper, ParameterValue,
 } from './styles';
-
-const { TabPane } = Tabs;
 
 export class ResponseItem extends Component {
   static propTypes = {
@@ -20,48 +18,44 @@ export class ResponseItem extends Component {
     const { response: item } = this.props;
     const { response } = item;
     return (
-      <Tabs defaultActiveKey="1">
-        <TabPane tab="EN" key="1">
-          <h2>{response.en}</h2>
-        </TabPane>
-        <TabPane tab="VN" key="2">
-          <h2>{response.vn}</h2>
-        </TabPane>
-      </Tabs>
+      <ResponseValueWrapper>
+        <div>
+          <span>EN:</span>
+          <b>{response.en}</b>
+        </div>
+        <div>
+          <span>VN:</span>
+          <b>{response.vn}</b>
+        </div>
+      </ResponseValueWrapper>
     );
   }
 
   renderParameters = () => {
-    const { response: item, parameters = [] } = this.props;
-    return item.parameters.map(({ parameterId, value }) => {
-      const { displayName } = parameters.find(({ parameterId: itemId }) => itemId === parameterId) || {};
-      return (
-        <ParameterWrapper key={parameterId}>
-          <ParameterTitle>
-            {`[${displayName}]`}
-          </ParameterTitle>
-          <ParameterValue>
-            {value}
-          </ParameterValue>
-        </ParameterWrapper>
-      );
-    });
+    const { response: item } = this.props;
+    return (
+      <ParameterValue>
+        {item.parameters.length}
+      </ParameterValue>
+    );
   }
 
   render() {
     const { onEdit, onRemove } = this.props;
     return (
       <ResponseItemWrapper>
-        <ResponseParameterWrapper>
-          {this.renderParameters()}
-        </ResponseParameterWrapper>
-        <ResponseActionWrapper>
-          <i role="presentation" className="mia-edit" onClick={onEdit} />
-          <i role="presentation" className="mia-close" onClick={onRemove} />
-        </ResponseActionWrapper>
-        <ResponseValueWrapper>
+        <Col span={16}>
           {this.renderResponse()}
-        </ResponseValueWrapper>
+        </Col>
+        <Col span={6}>
+          {this.renderParameters()}
+        </Col>
+        <Col span={2}>
+          <ResponseActionWrapper>
+            <i role="presentation" className="mia-edit" onClick={onEdit} />
+            <i role="presentation" className="mia-close" onClick={onRemove} />
+          </ResponseActionWrapper>
+        </Col>
       </ResponseItemWrapper>
     );
   }

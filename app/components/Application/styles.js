@@ -43,6 +43,9 @@ export const ApplicationTitle = styled.div`
 export const ApplicationBlock = styled.div`
   padding: 2em;
   width: 53.125em;
+  @media (max-width: 1024px) {
+    width: 75.125em;
+  }
   display: flex;
   flex-direction: column;
   background-color: ${props => props.theme.colorStyled.ColorWhite};

@@ -18,7 +18,7 @@ const userColumns = [
     dataKey: 'username',
     columnAttr: {
       value: toI18n('ADMIN_USERS_TABLE_USERNAME'),
-      percent: '20',
+      percent: '10',
       className: 'user-username text-bold',
     },
   },
@@ -28,6 +28,7 @@ const userColumns = [
     columnAttr: {
       value: toI18n('ADMIN_USERS_TABLE_EMAIL'),
       className: 'user-email text-bold',
+      percent: '20',
     },
   },
   {

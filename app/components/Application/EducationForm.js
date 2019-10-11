@@ -14,11 +14,12 @@ import {
 import { FIELD_OF_STUDY } from '../../../common/enums';
 import { toI18n } from '../../utils/func-utils';
 import { ButtonCancel, ButtonSubmit, ArrayAddButton } from '../../stylesheets/Button.style';
+import { APPLICATION_FORM } from '../../utils/constants';
 
 const educationInititalValues = {
   school: '',
   degree: '',
-  fieldOfStudies: [],
+  fieldOfStudy: [],
   gpa: 0,
 };
 
@@ -26,17 +27,6 @@ const initialValues = {
   educations: [],
 };
 
-const educationValidationSchema = Yup.object().shape({
-  school: Yup.string().trim().required('Required'),
-  degree: Yup.string().trim().required('Required'),
-  certificate: Yup.array().of(Yup.object()).required('Required'),
-  fieldOfStudies: Yup.array().of(Yup.string()),
-  gpa: Yup.number().min(0).max(5),
-});
-
-const validationSchema = Yup.object().shape({
-  educations: Yup.array().of(educationValidationSchema),
-});
 export class EducationForm extends Component {
   state = {
     isEducationFormOpen: false,
@@ -95,7 +85,7 @@ export class EducationForm extends Component {
         <Formik
           ref={(formik) => { this.educationformik = formik; }}
           initialValues={educationInititalValues}
-          validationSchema={educationValidationSchema}
+          validationSchema={APPLICATION_FORM.EDUCATION_ITEM_VALIDATION_SCHEMA}
           onSubmit={this.handleAddExperience}
         >
           {({ handleSubmit }) => (
@@ -123,7 +113,7 @@ export class EducationForm extends Component {
               <Row gutter={32}>
                 <Col sm={24} xs={24}>
                   <FormInput
-                    name="fieldOfStudies"
+                    name="fieldOfStudy"
                     type="select"
                     mode="multiple"
                     options={FIELD_OF_STUDY}
@@ -156,6 +146,7 @@ export class EducationForm extends Component {
                 <Col sm={24} xs={24}>
                   <ActionFormRegister>
                     <ButtonCancel
+                      type="button"
                       onClick={() => this.handleToggleEducationModal(false)}
                     >
                       {toI18n('FORM_CANCEL')}
@@ -175,7 +166,7 @@ export class EducationForm extends Component {
 
   renderEducation = (education, arrayHelpers, index) => {
     const {
-      school, degree, gpa, certificate, fieldOfStudies,
+      school, degree, gpa, certificate, fieldOfStudy,
     } = education;
     return (
       <ArrayTagWrapper key={index}>
@@ -186,7 +177,7 @@ export class EducationForm extends Component {
               <span>{degree}</span>
             </h2>
             <div className="GPA">
-              {fieldOfStudies.join(', ')}
+              {fieldOfStudy.join(', ')}
               <DescriptionNumber>
                 <span>{toI18n('APPLICATION_EDUCATION_RENDER_GPA')}</span>
                 {' : '}
@@ -249,7 +240,7 @@ export class EducationForm extends Component {
         <Formik
           ref={(formik) => { this.formik = formik; }}
           initialValues={initialValues}
-          validationSchema={validationSchema}
+          validationSchema={APPLICATION_FORM.EDUCATION_VALIDATION_SCHEMA}
           onSubmit={this.handleSubmit}
         >
           {({ handleSubmit, values }) => (

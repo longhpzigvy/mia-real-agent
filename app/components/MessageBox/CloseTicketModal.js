@@ -14,6 +14,8 @@ import { ActionBar } from '../CreateTicket/styles';
 import { getTicketIsClosing, getTicketCloseError } from '../../selectors/ticket';
 import LoadingSpin from '../Loading';
 import { ButtonCancel, ButtonSubmit } from '../../stylesheets/Button.style';
+import TicketReceipt from '../../containers/TicketReceipt/TicketReceipt';
+import TicketAgentReceipt from '../../containers/TicketAgentReceipt';
 
 
 const initialValues = {
@@ -39,6 +41,7 @@ class CloseTicketModal extends React.PureComponent {
   static propTypes = {
     isOpen: bool.isRequired,
     isClosing: bool.isRequired,
+    isAgent: bool,
     handleCloseModal: func.isRequired,
     closeError: string.isRequired,
     handleSubmitCloseTicket: func.isRequired,
@@ -61,6 +64,11 @@ class CloseTicketModal extends React.PureComponent {
 
   state = {}
 
+  renderTicketReceipt = () => {
+    const { isAgent } = this.props;
+    return isAgent ? (<TicketAgentReceipt />) : (<TicketReceipt />);
+  }
+
   render() {
     const {
       isOpen, handleCloseModal, handleSubmitCloseTicket, isClosing,
@@ -77,13 +85,17 @@ class CloseTicketModal extends React.PureComponent {
       >
         {({ handleSubmit, values }) => (
           <Modal
-            title="Close tickets"
+            title={toI18n('TICKET_RECEIPT_TITLE')}
             visible={isOpen}
             onOk={handleSubmit}
             onCancel={handleCloseModal}
+            width={800}
             footer={null}
           >
             <LoadingSpin loading={isClosing}>
+              {
+                values.status === TICKET_STATUS.SOLVED && this.renderTicketReceipt()
+              }
               <Form>
                 <Row gutter={32}>
                   <Col sm={24} xs={24}>
@@ -95,7 +107,6 @@ class CloseTicketModal extends React.PureComponent {
                         value,
                         label: value,
                       }))}
-                      login={1}
                     />
                     {
                       values.status === TICKET_STATUS.UNSOLVED && (

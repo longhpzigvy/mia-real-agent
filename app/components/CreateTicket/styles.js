@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const ActionBar = styled.div`
   margin: 1em 0em;
   button{
+    font-size: 1em;
     float: right;
     margin-right: 15px;
   }

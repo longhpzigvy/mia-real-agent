@@ -20,6 +20,7 @@ import {
 import * as UserApi from '../../api/user';
 import * as UploadApi from '../../api/upload';
 import { toI18n } from '../../utils/func-utils';
+import { TICKET_CLOSE_SUCCESS } from '../../reducers/ticket';
 
 function* fetchDetail() {
   const userId = yield select(getUserId);
@@ -156,7 +157,7 @@ function* topUp({ payload }) {
 }
 
 function* profileFlow() {
-  yield takeEvery([FETCH_DETAIL, AUTH_LOGIN_SUCCESS], fetchDetail);
+  yield takeEvery([FETCH_DETAIL, AUTH_LOGIN_SUCCESS, TICKET_CLOSE_SUCCESS], fetchDetail);
   yield takeEvery(UPDATE_PROFILE, updateProfile);
   yield takeEvery(CHECK_PASSWORD, checkPassword);
   yield takeEvery(CHANGE_PASSWORD, changePassword);

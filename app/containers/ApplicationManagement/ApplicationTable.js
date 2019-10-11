@@ -60,21 +60,21 @@ const applicationColumns = [
       className: 'application-languages',
     },
   },
-  {
-    type: COLUMN_TYPE.LINK,
-    dataKey: 'cv',
-    columnAttr: {
-      value: toI18n('ADMIN_APPLICATION_TABLE_CV'),
-      percent: 5,
-      className: 'application-cv',
-    },
-  },
+  // {
+  //   type: COLUMN_TYPE.LINK,
+  //   dataKey: 'cv',
+  //   columnAttr: {
+  //     value: toI18n('ADMIN_APPLICATION_TABLE_CV'),
+  //     percent: 5,
+  //     className: 'application-cv',
+  //   },
+  // },
   {
     type: COLUMN_TYPE.TEXT,
     dataKey: 'role',
     columnAttr: {
       value: toI18n('ADMIN_APPLICATION_TABLE_ROLE'),
-      percent: 5,
+      percent: 10,
       className: 'application-role',
     },
   },
@@ -83,34 +83,27 @@ const applicationColumns = [
     dataKey: 'status',
     columnAttr: {
       value: toI18n('ADMIN_APPLICATION_TABLE_STATUS'),
-      percent: 5,
-      className: 'application-satus',
+      percent: 15,
+      className: 'application-status',
     },
   },
-  {
-    type: COLUMN_TYPE.ACTIONS,
-    actions: [
-      {
-        dataKey: 'status',
-        oneOf: [APPLICATION_STATUS.PENDING],
-        action: 'applicationApprove',
-        type: 'check',
-        className: 'application-checked',
-      },
-      {
-        dataKey: 'status',
-        oneOf: [APPLICATION_STATUS.PENDING],
-        action: 'applicationReject',
-        type: 'close',
-        className: 'application-close',
-      },
-    ],
-    columnAttr: {
-      value: toI18n('ADMIN_APPLICATION_TABLE_ACTIONS'),
-      percent: 10,
-      className: 'application-action',
-    },
-  },
+  // {
+  //   type: COLUMN_TYPE.ACTIONS,
+  //   actions: [
+  //     {
+  //       dataKey: 'status',
+  //       oneOf: [APPLICATION_STATUS.PENDING],
+  //       action: 'applicationApprove',
+  //       type: 'review',
+  //       className: 'application-review',
+  //     },
+  //   ],
+  //   columnAttr: {
+  //     value: toI18n('ADMIN_APPLICATION_TABLE_ACTIONS'),
+  //     percent: 10,
+  //     className: 'application-action',
+  //   },
+  // },
 ];
 
 const mapDispatchToProps = {

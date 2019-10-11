@@ -12,130 +12,7 @@ import {
 } from './styles';
 import LoadingSpin from '../Loading';
 import { flatApplicationForm, toI18n } from '../../utils/func-utils';
-
-const mapping = {
-  nickname: {
-    label: toI18n('APPLICATION_REVIEW_FORM_NICKNAME'),
-    type: 'text',
-  },
-  firstName: {
-    label: toI18n('APPLICATION_REVIEW_FORM_FIRSTNAME'),
-    type: 'text',
-  },
-  lastName: {
-    label: toI18n('APPLICATION_REVIEW_FORM_LASTNAME'),
-    type: 'text',
-  },
-  role: {
-    label: toI18n('APPLICATION_REVIEW_FORM_ROLE'),
-    type: 'text',
-  },
-  email: {
-    label: toI18n('APPLICATION_REVIEW_FORM_EMAIL'),
-    type: 'text',
-  },
-  country: {
-    label: toI18n('APPLICATION_REVIEW_FORM_COUNTRY'),
-    type: 'text',
-  },
-  postcode: {
-    label: toI18n('APPLICATION_REVIEW_FORM_POSTCODE'),
-    type: 'text',
-  },
-  address: {
-    label: toI18n('APPLICATION_REVIEW_FORM_ADDRESS'),
-    type: 'text',
-  },
-  cv: {
-    label: toI18n('APPLICATION_REVIEW_FORM_CV'),
-    type: 'upload',
-  },
-  categories: {
-    label: toI18n('APPLICATION_REVIEW_FORM_CATEGORIES'),
-    type: 'text',
-  },
-  skills: {
-    label: toI18n('APPLICATION_REVIEW_FORM_SKILLS'),
-    type: 'text',
-  },
-  workExperiences: {
-    label: toI18n('APPLICATION_REVIEW_FORM_WORK_EXPERIENCES'),
-    type: 'list',
-    displayFields: {
-      title: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_TITLE'),
-        type: 'text',
-        tooltip: 'roleDescription',
-      },
-      company: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_COMPANY'),
-        type: 'text',
-      },
-      from: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_FROM'),
-        type: 'date',
-      },
-      to: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_TO'),
-        type: 'date',
-        skip: 'isWorking',
-        replace: toI18n('APPLICATION_REVIEW_FORM_LIST_NOW'),
-      },
-    },
-  },
-  educations: {
-    label: toI18n('APPLICATION_REVIEW_FORM_EDUCATIONS'),
-    type: 'list',
-    displayFields: {
-      fieldOfstudy: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_FOS'),
-        type: 'text',
-      },
-      school: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_SCHOOL'),
-        type: 'text',
-      },
-      degree: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_DEGREE'),
-        type: 'text',
-      },
-      gpa: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_GPA'),
-        type: 'text',
-      },
-      certificate: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_CERTIFICATE'),
-        type: 'upload',
-      },
-    },
-  },
-  languages: {
-    label: toI18n('APPLICATION_REVIEW_FORM_LANGUAGES'),
-    type: 'list',
-    displayFields: {
-      name: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_NAME'),
-        type: 'text',
-      },
-      writing: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_WRITING'),
-        type: 'text',
-      },
-      reading: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_READING'),
-        type: 'text',
-      },
-      speaking: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_SPEAKING'),
-        type: 'text',
-      },
-      overall: {
-        label: toI18n('APPLICATION_REVIEW_FORM_LIST_OVERALL'),
-        type: 'text',
-      },
-    },
-  },
-};
+import { APPLICATION_REVIEW_MAPPING } from '../../utils/constants';
 
 class ApplicationReview extends Component {
   state = {
@@ -154,7 +31,7 @@ class ApplicationReview extends Component {
 
   componentDidMount = () => {
     const { applicationDetail } = this.props;
-    const flattedFields = flatApplicationForm(applicationDetail, mapping);
+    const flattedFields = flatApplicationForm(applicationDetail, APPLICATION_REVIEW_MAPPING);
     this.setState({
       applicationReviewForms: flattedFields,
     });
@@ -165,7 +42,6 @@ class ApplicationReview extends Component {
     const { applicationReviewForms } = this.state;
     const form = this.reviewForm;
     const fields = form.getFields();
-    console.log(fields)
     this.setState({
       applicationReviewForms: {
         ...applicationReviewForms,
@@ -203,7 +79,23 @@ class ApplicationReview extends Component {
     const filtered = _keyBy(
       Object.keys(applicationReviewForms)
         .map(key => ({ ...applicationReviewForms[key], name: key }))
-        .filter(({ comment }) => comment),
+        .filter(({ comment }) => comment)
+        .map((field) => {
+          const {
+            name,
+            ref, value, comment, type,
+          } = field;
+          let refValues = null;
+          if (ref) {
+            refValues = _keyBy(ref.map(fieldName => ({
+              name: fieldName,
+              value: applicationReviewForms[fieldName].value,
+            })), 'name');
+          }
+          return {
+            name, value, comment, type, ref: refValues,
+          };
+        }),
       'name'
     );
     reviewSubmit(filtered, applicationId);

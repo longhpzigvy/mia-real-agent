@@ -48,7 +48,7 @@ class ReviewInput extends Component {
     label: shape().isRequired,
     name: string.isRequired,
     type: string.isRequired,
-    value: any.isRequired,
+    value: any,
     displayFields: shape(),
     onAdd: func,
     onRemove: func,
@@ -105,7 +105,10 @@ class ReviewInput extends Component {
       }
       case 'date':
         return moment(value).format(DATE_TIME_FORMAT.DATE);
-      case 'text':
+      case 'text': {
+        const result = value instanceof Array ? value.join(', ') : value;
+        return result;
+      }
       default: return value;
     }
   }
@@ -246,10 +249,8 @@ class ReviewInput extends Component {
                 <ButtonPrimary onClick={this.handleSubmitComment}>
                   {toI18n('FORM_SAVE')}
                 </ButtonPrimary>
-              </CommentAction>
-              <ReviewInputAction>
                 <Icon className="review-input-action" type="close" onClick={() => this.handleToggleRequest(false)} />
-              </ReviewInputAction>
+              </CommentAction>
             </div>
             <CommentWrapper>
               <CommentInput
@@ -272,7 +273,7 @@ class ReviewInput extends Component {
           <div>
             {this.selectInputType()}
             <ReviewInputAction>
-              <Icon className="review-input-action" component={CommentIcon} onClick={() => this.handleToggleRequest(true)} />
+              <Icon className="comment-icon" component={CommentIcon} onClick={() => this.handleToggleRequest(true)} />
             </ReviewInputAction>
           </div>
         </ReviewInputValueWrapper>

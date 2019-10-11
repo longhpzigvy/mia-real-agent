@@ -294,6 +294,7 @@ export const initialState = fromJS({
   isArchiving: false,
   isClosing: false,
   isGetting: false,
+  isSubmittingRating: false,
   fetching: fetchingObj,
   currentTicket: null,
 });
@@ -370,6 +371,10 @@ function ticketReducer(state = initialState, action) {
       return state.set('isUpdating', false)
         .setIn(['tickets', _id], fromJS({ ...tmpTicket, ...payload }));
     }
+
+    case TIKCET_RATING_SUBMIT: return state.set('isUpdating', true);
+
+    case TIKCET_RATING_SUBMIT_FAIL: return state.set('isUpdating', false);
 
     case TIKCET_RATING_SUBMIT_SUCCESS: {
       const { payload } = action;

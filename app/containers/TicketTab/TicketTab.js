@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { getTicketTotalRecord } from 'selectors/ticket';
-import { getAllTicketAction } from 'reducers/ticket';
+import { actions } from 'reducers/ticket';
 import { compose } from 'redux';
 import TicketTab from '../../components/TicketTab';
 import { getUserRole } from '../../reducers/auth';
@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getAllTicketAction,
+  fetchList: actions.getAllTicketAction,
 };
 
 export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(TicketTab);

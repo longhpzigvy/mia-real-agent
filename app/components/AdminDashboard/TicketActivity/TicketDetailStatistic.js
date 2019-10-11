@@ -9,9 +9,9 @@ import {
   TicketDetailGroupActiveItem,
   TicketDetailPercent,
 } from './TicketActivity.styled';
+import { COLOR_BY_STATUS, TICKET_STATUS } from '../../../../common/enums';
 
 const ChartSize = 200;
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 const RADIAN = Math.PI / 180;
 
 const renderCustomizedLabel = ({
@@ -38,16 +38,33 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
-const converDate = ({ resolved, pending }) => [
-  {
-    name: 'Ticket resolved',
-    value: resolved,
-  },
-  {
-    name: 'Ticket pending',
-    value: pending,
-  },
-];
+const converData = ({
+  solved, unsolved, pending, processing, idle,
+}) => [{
+  name: TICKET_STATUS.SOLVED,
+  value: solved,
+  color: COLOR_BY_STATUS.Solved,
+},
+{
+  name: TICKET_STATUS.UNSOLVED,
+  value: unsolved,
+  color: COLOR_BY_STATUS.Unsolved,
+},
+{
+  name: TICKET_STATUS.PENDING,
+  value: pending,
+  color: COLOR_BY_STATUS.Pending,
+},
+{
+  name: TICKET_STATUS.PROCESSING,
+  value: processing,
+  color: COLOR_BY_STATUS.Processing,
+},
+{
+  name: TICKET_STATUS.IDLE,
+  value: idle,
+  color: COLOR_BY_STATUS.Idle,
+}];
 
 const TicketDetailStatistic = ({ ticketActivity }) => (
   <TicketDetailGroupActiveItem>
@@ -55,14 +72,14 @@ const TicketDetailStatistic = ({ ticketActivity }) => (
       <PieChart width={ChartSize} height={ChartSize}>
         <Tooltip />
         <Pie
-          data={converDate(ticketActivity)}
+          data={converData(ticketActivity)}
           fill="#8884d8"
           dataKey="value"
           labelLine={false}
           label={renderCustomizedLabel}
         >
-          {converDate(ticketActivity).map((entry, index) => (
-            <Cell key={index} fill={COLORS[index % COLORS.length]} />
+          {converData(ticketActivity).map(({ color }, index) => (
+            <Cell key={index} fill={color} />
           ))}
         </Pie>
       </PieChart>

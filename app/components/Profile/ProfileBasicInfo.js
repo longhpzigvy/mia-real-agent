@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { shape } from 'prop-types';
 import { Col, Row } from 'antd';
+import Avatar from 'containers/Avatar';
 import ProfileFormContainer from '../../containers/Profile/ProfileForm';
 import ChangePasswordFormContainer from '../../containers/Profile/ChangePasswordForm/ChangePasswordFormContainer';
 import { InputLabelStyled, ActionBar, RowStyled } from './styles';
-import { toI18n } from '../../utils/func-utils';
+import { toI18n, isAgent } from '../../utils/func-utils';
 import { InputStyled } from '../FormInput/styles';
 import ProfileDetail from './ProfileDetail/ProfileDetail';
 import { ButtonPrimary } from '../../stylesheets/Button.style';
-import Avatar from 'containers/Avatar';
 
 class ProfileBasicInfo extends Component {
   state = {
@@ -79,21 +79,27 @@ class ProfileBasicInfo extends Component {
             </RowStyled>
           </Col>
         </Row>
-        <ProfileDetail role={role} profile={profile} />
+        {!isAgent(role) && (<ProfileDetail role={role} profile={profile} />)}
       </div>
     );
   }
 
   render() {
     const { isOpenConfirmPasswordModal, isOpenChangePasswordModal } = this.state;
-
+    const {
+      user: {
+        role,
+      },
+    } = this.props;
     return (
       <div>
         {this.renderBasicInfo()}
         <ActionBar>
-          <ButtonPrimary type="primary" onClick={this.handleOpenConfirmPasswordModal}>
-            {toI18n('PROFILE_EDIT')}
-          </ButtonPrimary>
+          {!isAgent(role) && (
+            <ButtonPrimary type="primary" onClick={this.handleOpenConfirmPasswordModal}>
+              {toI18n('PROFILE_EDIT')}
+            </ButtonPrimary>
+          )}
           <ButtonPrimary type="primary" onClick={this.handleOpenChangePasswordModal}>
             {toI18n('PROFILE_CHANGE_PASSWORD')}
           </ButtonPrimary>

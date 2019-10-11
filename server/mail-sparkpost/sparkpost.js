@@ -71,6 +71,18 @@ export const sendEmailResetPassword = (email, token, url) => {
   }, [{ address: email }]);
 };
 
+export const sendEmailChangeRequest = (email, token, url) => {
+  const content = createContentFromTemplate(
+    emailTemplates.changeRequest,
+    { token, url }
+  );
+  return send({
+    from: SPARK_POST_DOMAIN,
+    subject: content.subject,
+    html: content.html,
+  }, [{ address: email }]);
+};
+
 export const buildContent = (subject, text) => {
   if (!SPARK_POST_DOMAIN) {
     Logger.error('SPARK_POST_DOMAIN not found');

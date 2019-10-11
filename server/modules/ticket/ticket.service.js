@@ -1,7 +1,7 @@
 import _isEmpty from 'lodash/isEmpty';
 import ticketCollection from './ticket.model';
 import BaseService from '../base/base.service';
-import { TICKET_STATUS, REPLY_TYPE } from '../../../common/enums';
+import { TICKET_STATUS, REPLY_TYPE, BILLING_TYPE } from '../../../common/enums';
 // eslint-disable-next-line import/no-cycle
 import ReplyService from '../reply/reply.service';
 import ApplicationService from '../application/application.service';
@@ -11,7 +11,9 @@ import { sendEmailTrascript } from '../../mail-sparkpost/sparkpost';
 import UserService from '../user/user.service';
 import BillingService from '../billing/billing.service';
 import { conversationTranscript } from '../../mail-sparkpost/dynamicTemplate';
-import { ticketAdminAggregration, ticketWarningAdminAggregration, calculateChargeTime, directChargeTicket } from './ticket.utils';
+import { ticketAdminAggregration, ticketWarningAdminAggregration, directChargeTicket, totalTicketWarningAggregration } from './ticket.utils';
+import { MIA_RATE } from '../../../app/utils/constants';
+import { calculateChargeTime } from '../../../app/utils/func-utils';
 
 class TicketService extends BaseService {
   constructor(collection) {
@@ -89,9 +91,10 @@ class TicketService extends BaseService {
     const resultPromise = this.collection
       .aggregate(ticketWarningAdminAggregration(queryCondition, Number(limit), Number(skip), sort))
       .exec();
+    const { totalRecord } = (await this.collection.aggregate(totalTicketWarningAggregration(queryCondition)).exec())[0];
     return {
       result: await resultPromise,
-      totalRecord: await this.countDocument(queryCondition),
+      totalRecord,
     };
   }
 
@@ -213,20 +216,23 @@ class TicketService extends BaseService {
     // Direct charge if has remaining ticket time
     let miaFee = 0;
     let agentFee = 0;
-    const miaRate = 5; // TODO: Replace with system mia rate
     let agentRate = 0;
     let chargeAmount = 0;
+    let assigneeData = null;
+    const { _id: assigneeId } = assignee || {};
+    if (assignee) {
+      assigneeData = await UserService.getById(assigneeId);
+      const { application } = assigneeData;
+      agentRate = (await ApplicationService.get(application)).billingRate;
+    }
     if ((remainingOpeningTime > 0 || remainingProcessingTime > 0)
       && (!_isEmpty(creditCard) && stripeCustomerId)) {
       needDirectCharge = true;
       // Convert usedTime to $
       if (remainingOpeningTime > 0) {
-        miaFee = Number(miaRate * remainingOpeningTime / 60).toFixed(2);
+        miaFee = Number(MIA_RATE * remainingOpeningTime / 60).toFixed(2);
       }
       if (remainingProcessingTime > 0 && assignee) {
-        const { _id: assigneeId } = assignee;
-        const { application } = await UserService.getById(assigneeId);
-        agentRate = await ApplicationService.get(application).billingRate;
         agentFee = Number(agentRate * remainingProcessingTime / 60).toFixed(2);
       }
       chargeAmount = (+miaFee + +agentFee) >= 0.5 ? +miaFee + +agentFee : 0.5;
@@ -244,13 +250,14 @@ class TicketService extends BaseService {
       }
       // Save charge history
       await BillingService.ticketChargeBilling(
+        userId,
         {
           userCreditTime,
           ticketId: _id,
           timeBeforeChat,
           openingTime,
           processingTime,
-          miaRate,
+          miaRate: MIA_RATE,
           agentRate,
         },
         {
@@ -260,6 +267,29 @@ class TicketService extends BaseService {
           agentFee,
         }
       );
+      if (processingTime > 0) {
+        const { credit } = assigneeData;
+        // Add billing for agent
+        const agentPayout = Number(agentRate * processingTime / 60).toFixed(2);
+        await BillingService.insert(
+          {
+            userId: assigneeId,
+            type: BILLING_TYPE.TICKET_FULFILL,
+            content: {
+              ticketId: _id,
+              processingTime,
+              agentRate,
+            },
+            total: {
+              agentFee: agentPayout,
+            },
+          }
+        );
+        await UserService.update(
+          assigneeId,
+          { credit: +credit + +agentPayout }
+        );
+      }
       return true;
     }
     return false;

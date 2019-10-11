@@ -52,7 +52,7 @@ class FormInput extends React.Component {
     refInput(input);
   }
 
-  renderUploadInput = props => Upload(props);
+  renderUploadInput = props => (<Upload {...props} />);
 
 
   renderTextInput = ({
@@ -555,15 +555,12 @@ class FormInput extends React.Component {
       }
     };
 
-    const isTouched = getIn(touched, field.name);
     let errorMessage = '';
     let validateStatus = 'success';
 
-    if (isTouched) {
-      errorMessage = getIn(errors, field.name);
-      if (errorMessage) {
-        validateStatus = 'error';
-      }
+    errorMessage = getIn(errors, field.name);
+    if (errorMessage) {
+      validateStatus = 'error';
     }
     return (
       <InputWrapperStyled

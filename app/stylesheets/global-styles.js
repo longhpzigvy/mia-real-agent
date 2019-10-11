@@ -109,9 +109,8 @@ html, body, div, span, applet, object, iframe,
     }
   }
   .ant-menu-item.ant-menu-item-selected {
-    background-color: #ff5402;
-    border-bottom: 1px solid #ff5402;
     color: #fff;
+    border-bottom: none;
   }
   .ant-dropdown-menu {
     padding: 0 !important;

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import moment from 'moment';
 import { Tooltip, Icon } from 'antd';
@@ -9,7 +10,7 @@ import {
   TicketActionStatus, UserAction, TicketActionStatusTitle,
   TicketRatingScore, CommentWrapper, UserLabelWarning,
 } from './styles';
-import { ROLES } from '../../../common/enums';
+import { ROLES, BOT_AVATAR, DEFAULT_USER_AVATAR } from '../../../common/enums';
 import { toI18n, isAgent } from '../../utils/func-utils';
 
 const renderTime = (time) => {
@@ -29,9 +30,9 @@ const renderTime = (time) => {
 export const userChat = (msgId, contents, isPending = false) => (
   <MessageBoxItem right key={msgId}>
     <MessageText>
-      {contents.map(({ _id, messages, sentAt }) => (
-        <Tooltip key={msgId} placement="right" title={renderTime(sentAt)}>
-          <UserMessage key={_id} pending={isPending}>
+      {contents.map(({ _id, messages, sentAt }, index) => (
+        <Tooltip key={`${_id}[${index}]`} placement="right" title={renderTime(sentAt)}>
+          <UserMessage pending={isPending}>
             {messages}
           </UserMessage>
         </Tooltip>
@@ -40,15 +41,15 @@ export const userChat = (msgId, contents, isPending = false) => (
   </MessageBoxItem>
 );
 
-export const otherChat = (msgId, contents, avatar) => (
+export const otherChat = (msgId, contents, profile) => (
   <MessageBoxItem left key={msgId}>
     <ProfileImageStyled
-      src={avatar}
+      src={profile.avatar || DEFAULT_USER_AVATAR}
     />
     <MessageText>
-      {contents.map(({ _id, messages, sentAt }) => (
-        <Tooltip key={msgId} placement="left" title={renderTime(sentAt)}>
-          <p key={_id}>
+      {contents.map(({ _id, messages, sentAt }, index) => (
+        <Tooltip key={`${_id}[${index}]`} placement="left" title={renderTime(sentAt)}>
+          <p>
             {messages}
           </p>
         </Tooltip>
@@ -60,12 +61,12 @@ export const otherChat = (msgId, contents, avatar) => (
 export const botChat = (msgId, contents) => (
   <MessageBoxItem left key={msgId}>
     <ProfileImageStyled
-      src="/assets/images/mia-avatar.jpg"
+      src={BOT_AVATAR}
     />
     <MessageText>
-      {contents.map(({ _id, messages, sentAt }) => (
-        <Tooltip key={msgId} placement="left" title={renderTime(sentAt)}>
-          <p key={_id}>
+      {contents.map(({ _id, messages, sentAt }, index) => (
+        <Tooltip key={`${_id}[${index}]`} placement="left" title={renderTime(sentAt)}>
+          <p>
             {messages}
           </p>
         </Tooltip>
@@ -74,10 +75,10 @@ export const botChat = (msgId, contents) => (
   </MessageBoxItem>
 );
 
-export const otherTyping = messages => (
+export const otherTyping = (messages, profile = {}) => (
   <MessageBoxItemIsTyping left key="UserTyping">
     <ProfileImageStyled
-      src="/assets/images/user-live.jpeg"
+      src={profile.avatar || DEFAULT_USER_AVATAR}
     />
     <MessageText>
       <p>{messages.trim()}</p>
@@ -125,21 +126,8 @@ export const userAction = (msgId, from, params, sentAt) => {
 };
 
 export const warningAction = (msgId, from, contents, sentAt) => {
-  let messageOwner = '';
   // eslint-disable-next-line no-underscore-dangle
-  const { role, profile = {} } = from;
-  const { firstName, lastName, company = 'N/A' } = profile;
-  switch (role) {
-    case ROLES.INDIVIDUAL:
-      messageOwner = `${firstName} ${lastName}`;
-      break;
-    case ROLES.BUSINESS:
-      messageOwner = company;
-      break;
-    default:
-      messageOwner = `${firstName} ${lastName}`;
-      break;
-  }
+  const { username } = from;
   if (isAgent(from.role)) {
     return (
       <MessageBoxItem left key={msgId}>
@@ -148,7 +136,7 @@ export const warningAction = (msgId, from, contents, sentAt) => {
             contents.map(({ _id, messages }) => (
               <Tooltip key={msgId} placement="left" title={renderTime(sentAt)}>
                 <UserLabelWarning>
-                  {messageOwner}
+                  {username}
                 </UserLabelWarning>
                 <p key={_id}>
                   {messages}
@@ -166,7 +154,7 @@ export const warningAction = (msgId, from, contents, sentAt) => {
         {contents.map(({ _id, messages }) => (
           <Tooltip key={msgId} placement="right" title={renderTime(sentAt)}>
             <UserLabelWarning user>
-              {messageOwner}
+              {username}
             </UserLabelWarning>
             <UserMessage key={_id}>
               {messages}

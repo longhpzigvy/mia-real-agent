@@ -23334,3 +23334,12 @@ html {
   background-color: #a03400;
   border-color: #a03400;
 }
+
+.ant-tooltip-inner svg{
+  margin-bottom: -12px;
+}
+
+.ant-dropdown-menu-item-selected, .ant-dropdown-menu-submenu-title-selected, .ant-dropdown-menu-item-selected > a, .ant-dropdown-menu-submenu-title-selected > a{
+  color: #ff2700;
+  background-color: #fff2e6;
+}

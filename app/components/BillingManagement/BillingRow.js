@@ -13,7 +13,7 @@ import { DATE_TIME_FORMAT, NUMERAL_MONEY_FORMAT } from '../../utils/constants';
 import {
   AddText, MinusText, BoldText, MoneyText,
 } from './styles';
-import { toI18n } from '../../utils/func-utils';
+import { toI18n, getHourMinutes } from '../../utils/func-utils';
 
 export class BillingRow extends TableRow {
   renderBillingColumn = (column, index) => {
@@ -30,6 +30,7 @@ export class BillingRow extends TableRow {
     const { createdAt, total, content } = item;
     const { exchangeRate } = content;
     const { amount } = total;
+    const time = getHourMinutes(amount * exchangeRate);
     return [
       {
         value: (<span>
@@ -49,7 +50,37 @@ export class BillingRow extends TableRow {
         percent: 25,
       },
       {
-        value: (<AddText>{`+ ${amount * exchangeRate}m`}</AddText>),
+        value: (<AddText>{`+ ${Numeral(time.hours).format('00')}:${Numeral(time.minutes).format('00')}`}</AddText>),
+        percent: 15,
+        justify: 'flex-end',
+      },
+    ].map(this.renderBillingColumn);
+  }
+
+  renderFulfill = () => {
+    const { item } = this.props;
+    const { createdAt, total, content } = item;
+    const { agentFee } = total;
+    const { ticketId } = content;
+    // const time = getHourMinutes(amount * exchangeRate);
+    return [
+      {
+        value: (<span>
+          {toI18n('BILLING_INFO_ROW_CREDIT_FOR_TICKET')}
+          <BoldText>
+            (
+            {ticketId}
+            )
+          </BoldText>
+        </span>),
+        percent: 60,
+      },
+      {
+        value: moment(createdAt).format(DATE_TIME_FORMAT.DATE_TIME),
+        percent: 25,
+      },
+      {
+        value: (<AddText>{`+ ${Numeral(agentFee).format(NUMERAL_MONEY_FORMAT)}`}</AddText>),
         percent: 15,
         justify: 'flex-end',
       },
@@ -62,6 +93,7 @@ export class BillingRow extends TableRow {
     const { ticketId } = content;
     const { usedCreditTime, chargeAmount } = total;
     const renders = [];
+    const time = getHourMinutes(usedCreditTime);
     if (usedCreditTime > 0) {
       renders.push(
         [
@@ -81,7 +113,7 @@ export class BillingRow extends TableRow {
             percent: 25,
           },
           {
-            value: (<MinusText>{`- ${usedCreditTime}m`}</MinusText>),
+            value: (<MinusText>{`- ${Numeral(time.hours).format('00')}:${Numeral(time.minutes).format('00')}`}</MinusText>),
             percent: 15,
             justify: 'flex-end',
           },
@@ -120,27 +152,41 @@ export class BillingRow extends TableRow {
   render() {
     const { isPointer, item } = this.props;
     const { type } = item;
-    if (type === BILLING_TYPE.TOPUP) {
-      return (
-        <TableContentWrapper>
-          <TableContentItem onClick={this.onClick}>
-            <TableContentItemGroup isPointer={isPointer}>
-              {this.renderTopUp()}
-            </TableContentItemGroup>
-          </TableContentItem>
-        </TableContentWrapper>
-      );
+    switch (type) {
+      case BILLING_TYPE.TICKET_FULFILL:
+        return (
+          <TableContentWrapper>
+            <TableContentItem onClick={this.onClick}>
+              <TableContentItemGroup isPointer={isPointer}>
+                {this.renderFulfill()}
+              </TableContentItemGroup>
+            </TableContentItem>
+          </TableContentWrapper>
+        );
+      case BILLING_TYPE.TOPUP:
+        return (
+          <TableContentWrapper>
+            <TableContentItem onClick={this.onClick}>
+              <TableContentItemGroup isPointer={isPointer}>
+                {this.renderTopUp()}
+              </TableContentItemGroup>
+            </TableContentItem>
+          </TableContentWrapper>
+        );
+      case BILLING_TYPE.TICKET_CHARGE:
+      default: {
+        const chargeRenders = this.renderCharge();
+        return chargeRenders.map(value => (
+          <TableContentWrapper>
+            <TableContentItem onClick={this.onClick}>
+              <TableContentItemGroup isPointer={isPointer}>
+                {value}
+              </TableContentItemGroup>
+            </TableContentItem>
+          </TableContentWrapper>
+        ));
+      }
     }
-    const chargeRenders = this.renderCharge();
-    return chargeRenders.map(value => (
-      <TableContentWrapper>
-        <TableContentItem onClick={this.onClick}>
-          <TableContentItemGroup isPointer={isPointer}>
-            {value}
-          </TableContentItemGroup>
-        </TableContentItem>
-      </TableContentWrapper>
-    ));
   }
 }
 

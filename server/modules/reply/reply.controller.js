@@ -31,7 +31,6 @@ class ReplyController extends BaseController {
       // Get mia full fillment text
       const { data: { queryResult } } = miaReply;
       const { fulfillmentText, allRequiredParamsPresent, intent } = queryResult;
-
       if (allRequiredParamsPresent && !intent.isFallback) {
         const socket = userQueue.getUser(from);
         socket.emit(SOCKET_EMIT.FOUND_SOLUTION, { conversationId });
@@ -56,11 +55,11 @@ class ReplyController extends BaseController {
       const { conversationId } = reply;
       // Get number of reply
       const noReply = await this.service.countDocument({ conversationId });
-      await this.service.insert(reply);
+      const result = await this.service.insert(reply);
       const { ticketId } = await ConversationService.getOneByQuery({ _id: conversationId });
       // For processing time
       if (
-        noReply === 1 // Skip first status log
+        noReply === 2 // Skip first status log and welcome
       ) {
         TicketService.updateProcessingTime(ticketId);
       }
@@ -71,7 +70,7 @@ class ReplyController extends BaseController {
       } else {
         setTimeout(() => this.getResponseFromMia(reply), 0);
       }
-      return res.status(httpStatus.OK).send({ reply });
+      return res.status(httpStatus.OK).send({ reply: result });
     } catch (error) {
       return super.handleError(res, error);
     }

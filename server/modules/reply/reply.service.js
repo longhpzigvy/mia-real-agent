@@ -23,7 +23,7 @@ class ReplyService extends BaseService {
     })
       .populate({
         path: 'from',
-        select: ['_id', 'role', 'username', 'application'],
+        select: ['_id', 'role', 'username', 'application', 'profile'],
         populate: ({ path: 'application', select: ['nickname', 'billingRate'] }),
       }).exec();
     return replies;
@@ -69,7 +69,7 @@ class ReplyService extends BaseService {
         })
           .populate({
             path: 'from',
-            select: ['_id', 'role', 'username', 'application'],
+            select: ['_id', 'role', 'username', 'application', 'profile'],
             populate: ({ path: 'application', select: ['nickname', 'billingRate'] }),
           });
         ConversationRoomQueue.conversationNewMessage(conversationId, reply);

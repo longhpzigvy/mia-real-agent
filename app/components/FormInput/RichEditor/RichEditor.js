@@ -54,9 +54,9 @@ class RichEditor extends Component {
 
     this.mentionPlugin = createMentionPlugin({
       positionSuggestions: settings => ({
-        left: `${settings.decoratorRect.left - 320}px`,
-        top: `${settings.decoratorRect.top - 130}px`,
-        display: 'block',
+        left: `0`,
+        top: `0`,
+        display: 'absolute',
         transform: 'scale(1) translateY(-100%)',
         transformOrigin: '1em 0% 0px',
         transition: 'all 0.25s cubic-bezier(0.3, 1.2, 0.2, 1)',

@@ -3,7 +3,8 @@ import httpStatus from 'http-status';
 export const ERROR_MESSAGE = {
   CONTENT_NOT_FOUND: 'No content available',
   BAD_REQUEST: 'Invalid request',
-  EMAIL_EXIST: 'Email is exist',
+  EMAIL_EXIST: 'Email is existed',
+  NICKNAME_EXIST: 'Nickname is existed',
   EMAIL_NOT_EXIST: 'Email not exist',
   TOKEN_NOT_MATCH: 'Token not match',
   TOKEN_EXPIRED: 'Token Expired',

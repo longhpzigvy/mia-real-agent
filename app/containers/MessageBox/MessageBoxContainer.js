@@ -1,13 +1,9 @@
 import { connect } from 'react-redux';
 import { getUserId, getUserRole } from 'reducers/auth';
-import { withTranslation } from 'react-i18next';
 import { actions as cannedResponseActions } from 'reducers/cannedResponse';
 import {
   isFetchingReplies,
   getErrorMessage,
-  getReplyMessagesByConversationId,
-  getSendingMessages,
-  getSendingMessagesError,
   sendReplyMessage,
 } from '../../reducers/replies';
 import {
@@ -20,9 +16,6 @@ import {
   getCurrentConveration,
   getConverationById,
   actions as CONVERSATION_ACTIONS,
-  getSystemMessage,
-  getOtherUserTyping,
-  getSolution,
 } from '../../reducers/conversations';
 import {
   submitFeedback,
@@ -36,7 +29,6 @@ import { getCannedResponsesForUser } from '../../selectors/cannedResponse';
 
 const mapStateToProps = (state) => {
   const conversationId = getCurrentConveration(state);
-  const solutionFound = getSolution(state).includes(conversationId);
   return ({
     conversationId,
     userId: getUserId(state),
@@ -44,15 +36,9 @@ const mapStateToProps = (state) => {
     currentTicket: getTicketById(state, getCurrentTicket(state)),
     isFetchingReplies: isFetchingReplies(state, conversationId),
     errorMessage: getErrorMessage(state, conversationId),
-    replyMessages: getReplyMessagesByConversationId(state, conversationId),
-    sendingMessages: getSendingMessages(state, conversationId),
-    sendingMessageErrors: getSendingMessagesError(state, conversationId),
     isFindingAgent: isFindingAgent(state, conversationId),
     userRole: getUserRole(state),
     cannedResponses: getCannedResponsesForUser(state),
-    systemMessage: getSystemMessage(state),
-    otherUserTyping: getOtherUserTyping(state),
-    solutionFound,
   });
 };
 
@@ -69,4 +55,4 @@ const mapDispatchToProps = {
   closeTicket: actions.closeAction,
 };
 
-export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(MessageBox));
+export default connect(mapStateToProps, mapDispatchToProps)(MessageBox);

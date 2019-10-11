@@ -26,6 +26,7 @@ class TicketController extends BaseController {
     this.getAll = this.getAll.bind(this);
     this.getAllConversations = this.getAllConversations.bind(this);
     this.getOwnerAndAssigneeProfile = this.getOwnerAndAssigneeProfile.bind(this);
+    this.findAvailableAgents = this.findAvailableAgents.bind(this);
     this.closeTicket = this.closeTicket.bind(this);
   }
 
@@ -39,7 +40,7 @@ class TicketController extends BaseController {
       const { conversationId, owner } = ticket;
       ReplyService.logUserAction(conversationId, owner, REPLY_USER_ACTION.REQUEST_AGENT);
       if (!request) {
-        return res.status(httpStatus.NOT_FOUND).send('Agent not found!');
+        throw new APIError('Agent not found!', httpStatus.NOT_FOUND);
       }
       const { history } = ticket;
       const oldTicket = history.map(h => h.toJSON());
@@ -49,7 +50,7 @@ class TicketController extends BaseController {
       ticket.save({});
       return res.status(httpStatus.OK).send();
     } catch (error) {
-      return super.handleError(res, error);
+      return this.handleError(res, error);
     }
   }
 
@@ -153,6 +154,12 @@ class TicketController extends BaseController {
           messages: 'Ticket Created',
           type: REPLY_TYPE.TICKET_STATUS,
           params: { status: TICKET_STATUS.OPEN },
+        });
+        // Mia bot automatic welcome
+        ReplyService.insert({
+          conversationId,
+          messages: 'Hello, How can I help you?',
+          type: REPLY_TYPE.BOT_RESPONSE,
         });
       } catch (error) {
         this.service.delete(ticketId);

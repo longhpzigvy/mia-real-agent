@@ -9,7 +9,8 @@ import MediaQuery from 'react-responsive';
 import ResponseItem from './ResponseItem';
 import { toI18n } from '../../utils/func-utils';
 import EditResponseModal from '../../containers/EditResponseModal';
-import { NoResposne, SpinningWrapper } from './styles';
+import { NoResposne, SpinningWrapper, ResponseListHeader } from './styles';
+import { Row, Col } from 'antd';
 
 const widthBreakpoint = 768;
 const scrollStyle = {
@@ -79,6 +80,11 @@ export class ResponseList extends Component {
     }
     return (
       <div>
+        <ResponseListHeader gutter={32}>
+          <Col span={16}>Response</Col>
+          <Col span={6}>Param</Col>
+          <Col span={2}>Action</Col>
+        </ResponseListHeader>
         {this.renderResponseList()}
         <EditResponseModal
           responseId={selectedId}

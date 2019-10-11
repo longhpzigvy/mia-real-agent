@@ -1,27 +1,30 @@
 import styled from 'styled-components';
+import { Row } from 'antd';
 
-export const ResponseItemWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 1em 1.5em;
-  border-top: 1px solid ${props => props.theme.colorStyled.ColorBorder};
-`;
-
-export const ResponseParameterWrapper = styled.div`
-  margin-right: .75em;
-  width: 40%;
+export const ResponseItemWrapper = styled(Row)`
+  border: 1px solid ${props => props.theme.colorStyled.ColorBorder};
+  border-bottom: 0;
+  padding: .8em 1em;
+  :last-of-type{
+    border-bottom: 1px solid ${props => props.theme.colorStyled.ColorBorder};
+  }
 `;
 
 export const ResponseValueWrapper = styled.div`
- flex: 0 0 100%; 
+  > div {
+     b {
+       font-weight: 600;
+       margin-left: .5em;
+     }
+  }
 `;
 
 export const ResponseActionWrapper = styled.div`
   font-size: ${props => props.theme.fontSize.BaseFontSize};
   display: flex;
   padding-top: 1em;
-  justify-content: space-around;
-  width: 5%;
+  justify-content: center;
+  width: 100%;
   .mia-edit{
     margin-right: .5em;
     &:hover{
@@ -35,19 +38,8 @@ export const ResponseActionWrapper = styled.div`
   }
 `;
 
-export const ParameterWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 1em 0;
-`;
-
-export const ParameterTitle = styled.div`
-  margin-right: .5em;
-  flex: 0 0 20%;
-`;
-
 export const ParameterValue = styled.div`
-  margin-right: .5em;
   font-weight: 600;
-  flex: 0 0 50%;
+  padding: 0 1.3em;
+  line-height: 2.4em;
 `;

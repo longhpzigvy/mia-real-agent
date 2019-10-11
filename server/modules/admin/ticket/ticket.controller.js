@@ -80,12 +80,13 @@ class AdminTicketController extends BaseController {
         $and: [notDeletedCondition, notArchivedCondition],
       };
 
-      const resolved = await this.service.getTicketCount({ ...queryCondition, status: TICKET_STATUS.RESOLVED });
-      const pending = await this.service.getTicketCount({ ...queryCondition, status: TICKET_STATUS.IDLE });
+      const solved = await this.service.getTicketCount({ ...queryCondition, status: TICKET_STATUS.SOLVED });
+      const unsolved = await this.service.getTicketCount({ ...queryCondition, status: TICKET_STATUS.UNSOLVED });
+      const pending = await this.service.getTicketCount({ ...queryCondition, status: TICKET_STATUS.PENDING });
+      const idle = await this.service.getTicketCount({ ...queryCondition, status: TICKET_STATUS.IDLE });
       const processing = await this.service.getTicketCount({ ...queryCondition, status: TICKET_STATUS.PROCESSING });
-      const closed = await this.service.getTicketCount({ ...queryCondition, status: { $in: CLOSED_TICKET_STATUSES } });
       return res.status(httpStatus.OK).send({
-        resolved, pending, processing, closed,
+        solved, unsolved, pending, processing, idle,
       });
     } catch (error) {
       return this.handleError(res, error);

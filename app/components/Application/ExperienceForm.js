@@ -5,7 +5,6 @@ import {
 } from 'antd';
 import { Formik, FieldArray } from 'formik';
 import { func } from 'prop-types';
-import * as Yup from 'yup';
 import FormInput from '../FormInput/FormInput';
 import {
   ActionFormRegister,
@@ -13,7 +12,7 @@ import {
   ArrayInputWrapper, ArrayWrapper, TagAction,
 } from './styles';
 import { CATEGORY_OPTIONS } from '../../../common/enums';
-import { DATE_TIME_FORMAT } from '../../utils/constants';
+import { DATE_TIME_FORMAT, APPLICATION_FORM } from '../../utils/constants';
 import { toI18n } from '../../utils/func-utils';
 import { ButtonCancel, ButtonSubmit, ArrayAddButton } from '../../stylesheets/Button.style';
 
@@ -31,32 +30,6 @@ const initialValues = {
   categories: [],
   workExperiences: [],
 };
-
-
-const experienceValidationSchema = Yup.object().shape({
-  title: Yup.string().trim().required('Required'),
-  company: Yup.string().trim().required('Required'),
-  location: Yup.string().trim(),
-  isWorking: Yup.boolean(),
-  from: Yup.date()
-    .when('isWorking', {
-      is: true,
-      then: Yup.date().required('Required'),
-      otherwise: Yup.date().required('Required').max(Yup.ref('to'), 'From cannot exceed To'),
-    }),
-  to: Yup.date()
-    .when('isWorking', {
-      is: true,
-      then: Yup.date(),
-      otherwise: Yup.date().required('Required').min(Yup.ref('from'), 'To cannot lower Form'),
-    }),
-  roleDescription: Yup.string().trim(),
-});
-
-const validationSchema = Yup.object().shape({
-  categories: Yup.array().of(Yup.string()).required('Required'),
-  workExperiences: Yup.array().of(Yup.object()),
-});
 
 export class ExperienceForm extends Component {
   state = {
@@ -119,7 +92,7 @@ export class ExperienceForm extends Component {
         <Formik
           ref={(formik) => { this.experienceformik = formik; }}
           initialValues={experienceInititalValues}
-          validationSchema={experienceValidationSchema}
+          validationSchema={APPLICATION_FORM.EXPERIENCE_WORK_ITEM_VALIDATION_SCHEMA}
           onSubmit={this.handleAddExperience}
         >
           {({ handleSubmit, values }) => (
@@ -304,7 +277,7 @@ export class ExperienceForm extends Component {
         <Formik
           ref={(formik) => { this.formik = formik; }}
           initialValues={initialValues}
-          validationSchema={validationSchema}
+          validationSchema={APPLICATION_FORM.EXPERIENCE_VALIDATION_SCHEMA}
           onSubmit={this.handleSubmit}
         >
           {({ handleSubmit, values }) => (

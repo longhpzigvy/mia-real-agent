@@ -36,6 +36,9 @@ export const SpinnerWrapperStyled = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  top: 44%;
+  right: 50%;
   .main-circle {
     background-color: rgba(0, 0, 0, 0);
     border: 2px solid #f3f3f3;

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { REVIEW_STATUS } from '../../../common/enums';
 
 const { Schema } = mongoose;
 // Form data:
@@ -8,13 +9,21 @@ const { Schema } = mongoose;
 //     type,
 //     value,
 //     comment,
-//     validateSchema: 'APPLICATION.FORM_NAME.FIELD',
 //   },
 // }
 const reviewSchema = new Schema(
   {
     fields: {
       type: Object,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: [
+        REVIEW_STATUS.CLOSED,
+        REVIEW_STATUS.OPEN,
+      ],
+      default: REVIEW_STATUS.OPEN,
       required: true,
     },
     applicationId: {

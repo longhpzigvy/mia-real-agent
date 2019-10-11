@@ -81,13 +81,21 @@ class TableRow extends React.PureComponent {
     actions.forEach(({
       dataKey, oneOf, action, ...rest
     }) => {
-      const value = _get(item, dataKey);
-      const func = parentProps[action];
-      if (_includes(oneOf, value)) {
+      if (!dataKey) {
+        const func = parentProps[action];
         icons = icons.concat({
           func,
           ...rest,
         });
+      } else {
+        const value = _get(item, dataKey);
+        const func = parentProps[action];
+        if (_includes(oneOf, value)) {
+          icons = icons.concat({
+            func,
+            ...rest,
+          });
+        }
       }
     });
     return (

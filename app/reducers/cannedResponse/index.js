@@ -127,17 +127,17 @@ function addNewCannedResponseFail(errMsg) {
   };
 }
 
-function removeCannedResponse(cannedResponseId) {
+function removeCannedResponse({ _id }) {
   return {
     type: CANNED_RESPONSE_REMOVE,
-    cannedResponseId,
+    cannedResponseId: _id,
   };
 }
 
-function removeCannedResponseSuccess(cannedResponseId) {
+function removeCannedResponseSuccess(cannedResponse) {
   return {
     type: CANNED_RESPONSE_REMOVE_SUCCESS,
-    cannedResponseId,
+    cannedResponse,
   };
 }
 
@@ -331,6 +331,30 @@ function cannedResponseReducer(state = initialState, action) {
     }
 
     case CANNED_RESPONSE_UPDATE_FAIL: {
+      const { errorMsg } = action;
+
+      return state
+        .setIn(['update', 'inProgress'], false)
+        .setIn(['update', 'message'], errorMsg);
+    }
+
+    case CANNED_RESPONSE_REMOVE: {
+      return state
+        .setIn(['update', 'inProgress'], true)
+        .setIn(['update', 'message'], '');
+    }
+
+    case CANNED_RESPONSE_REMOVE_SUCCESS: {
+      const { _id } = action.cannedResponse;
+      const visibleCannedResponseIds = state.get('visibleCannedResponseIds').toJS();
+      const newVisibleCannedResponseIds = visibleCannedResponseIds.filter(value => value !== _id);
+      return state
+        .setIn(['update', 'inProgress'], false)
+        .deleteIn(['cannedResponse', _id])
+        .set('visibleCannedResponseIds', fromJS(newVisibleCannedResponseIds));
+    }
+
+    case CANNED_RESPONSE_REMOVE_FAIL: {
       const { errorMsg } = action;
 
       return state

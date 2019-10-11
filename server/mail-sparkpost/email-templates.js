@@ -16,6 +16,7 @@ const userRegisterSucceed = getTemplate('user-register-succeed');
 const transcriptConversation = getTemplate('transcript-conversation');
 const applicationAccepted = getTemplate('application-accepted');
 const resetPassword = getTemplate('reset-password');
+const changeRequest = getTemplate('change-request');
 
 
 const applyDefaultTemplate = content => defaultTemplate.replace('[MAIN_CONTENT]', content);
@@ -24,6 +25,10 @@ export default {
   resetPassword: {
     subject: 'Mia Consults - Reset Password',
     html: applyDefaultTemplate(resetPassword),
+  },
+  changeRequest: {
+    subject: 'Mia Consults - Change Request',
+    html: applyDefaultTemplate(changeRequest),
   },
   transcriptConverstion: {
     subject: 'Mia Consults - Conversation history',

@@ -19,45 +19,43 @@ import {
   TicketStatus,
 } from './TicketTab.styles';
 import CreateTicketFormContainer from '../../containers/Chatbot/CreateTicket';
-import { PAGE_SIZE, TICKET_STATUS } from '../../../common/enums';
+import { PAGE_SIZE, TICKET_STATUS, CATEGORY_OPTIONS } from '../../../common/enums';
 import { isAgent, toI18n } from '../../utils/func-utils';
 import SearchInput from '../SearchInput';
-
-const categories = [
-  'Finance',
-  'Law',
-  'Insurrance',
-];
 
 class TicketTab extends PureComponent {
   state = {
     isOpenCreateModal: false,
+    statusFilter: null,
+    categoryFilter: null,
   }
 
   componentDidMount() {
-    const { getAllTicketAction, match, history } = this.props;
-    getAllTicketAction({ skip: 0, limit: PAGE_SIZE });
+    const { fetchList, match, history } = this.props;
     const { params } = match;
     const { tab, page } = params;
-    if (page && _isNumber(page)) {
-      getAllTicketAction({ skip: (page - 1) * PAGE_SIZE, limit: PAGE_SIZE });
+    if (page) {
+      fetchList({ skip: (parseInt(page, 10) - 1) * PAGE_SIZE, limit: PAGE_SIZE });
     } else {
       history.push(`/dashboard/${tab}/1`);
     }
   }
 
-  componentDidUpdate = (prevProps) => {
-    const { getAllTicketAction, match } = this.props;
+  componentDidUpdate = (prevProps, prevStates) => {
+    const { fetchList, match } = this.props;
+    const { statusFilter, categoryFilter } = this.state;
     const { params } = match;
     const { page } = params;
-    if (prevProps.match.params.page !== page) {
-      getAllTicketAction({ skip: (page - 1) * PAGE_SIZE, limit: PAGE_SIZE });
+    if (prevProps.match.params.page !== page
+      || prevStates.statusFilter !== statusFilter
+      || prevStates.categoryFilter !== categoryFilter
+    ) {
+      const query = {
+        status: statusFilter || { $exists: true },
+        category: categoryFilter ? { $in: [categoryFilter] } : { $exists: true },
+      };
+      fetchList({ skip: (page - 1) * PAGE_SIZE, limit: PAGE_SIZE, query });
     }
-    // if (page === 0 && totalRecord > 0) {
-    //   this.setState({
-    //     page: 1,
-    //   });
-    // }
   }
 
   handleChangePage = (current) => {
@@ -66,6 +64,12 @@ class TicketTab extends PureComponent {
     const { tab } = params;
     history.push(`/dashboard/${tab}/${current}`);
   }
+
+  handleFilter = (name, value) => {
+    this.setState({
+      [name]: value,
+    });
+  };
 
   handleOpenCreateModal = () => {
     this.setState({
@@ -79,26 +83,46 @@ class TicketTab extends PureComponent {
     });
   }
 
-  filterStatus = () => (
-    <Menu>
-      {Object.values(TICKET_STATUS).map((status, index) => (
-        <Menu.Item key={index}>
-          <TicketStatus status={status} />
-          <span>{status}</span>
+  filterStatus = () => {
+    const { statusFilter } = this.state;
+    return (
+      <Menu
+        selectedKeys={[statusFilter || 'All']}
+      >
+        <Menu.Item key="All" onClick={() => this.handleFilter('statusFilter', null)}>
+          <TicketStatus status={null} />
+          <span>All</span>
         </Menu.Item>
-      ))}
-    </Menu>
-  );
+        {Object.values(TICKET_STATUS).map(status => (
+          <Menu.Item
+            key={status}
+            onClick={() => this.handleFilter('statusFilter', status)}
+          >
+            <TicketStatus status={status} />
+            <span>{status}</span>
+          </Menu.Item>
+        ))}
+      </Menu>
+    );
+  };
 
-  filterCategory = () => (
-    <Menu>
-      {Object.values(categories).map((status, index) => (
-        <Menu.Item key={index}>
-          <span>{status}</span>
+  filterCategory = () => {
+    const { categoryFilter } = this.state;
+    return (
+      <Menu
+        selectedKeys={[categoryFilter || 'All']}
+      >
+        <Menu.Item key="All" onClick={() => this.handleFilter('categoryFilter', null)}>
+          <span>All</span>
         </Menu.Item>
-      ))}
-    </Menu>
-  );
+        {CATEGORY_OPTIONS.map(category => (
+          <Menu.Item key={category.value} onClick={() => this.handleFilter('categoryFilter', category.value)}>
+            <span>{category.label}</span>
+          </Menu.Item>
+        ))}
+      </Menu>
+    );
+  }
 
   renderSelectStatus = () => (
     <Dropdown overlay={this.filterStatus} trigger={['click']}>
@@ -172,7 +196,7 @@ class TicketTab extends PureComponent {
 }
 
 TicketTab.propTypes = {
-  getAllTicketAction: PropTypes.func,
+  fetchList: PropTypes.func,
   totalRecord: number.isRequired,
   userRole: string.isRequired,
   history: shape(),

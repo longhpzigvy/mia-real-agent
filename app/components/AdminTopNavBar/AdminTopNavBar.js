@@ -7,10 +7,10 @@ import {
   ProfileStyled,
   ProfileImageStyled,
   UserNameAdmin,
-  ActionsStyled,
   SettingIcon,
 } from './AdminTopNavBar.styled';
 import ProfileUser from '../../containers/ProfileUser';
+import { DEFAULT_USER_AVATAR } from '../../../common/enums';
 
 class AdminTopNavBar extends PureComponent {
   state = {
@@ -32,7 +32,7 @@ class AdminTopNavBar extends PureComponent {
         <TopbarRightAdmin>
           <ProfileStyled>
             <ProfileImageStyled
-              src="/assets/images/user.svg"
+              src={DEFAULT_USER_AVATAR}
               onClick={this.onToggleUserInfo}
             />
             <UserNameAdmin>admin@gmail.com</UserNameAdmin>

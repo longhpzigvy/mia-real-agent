@@ -88,6 +88,9 @@ export const ConversationTitle = styled.div`
   span {
     font-weight: 600;
   }
+  @media (max-width: 1024px) {
+    max-height: 3.5em;
+  }
 `;
 
 export const MessageInputWrapper = styled.div`
@@ -229,6 +232,8 @@ export const FindAgentWrapper = styled.div`
   p{
     border-radius: 15px 15px 0 0;
     margin-left: 10px;  
+    background-color:  ${props => props.theme.colorStyled.ColorMidGrey};
+    color: ${props => props.theme.colorStyled.ColorWhite};
   }
 `;
 
@@ -274,15 +279,6 @@ export const ConversationHeaderWrapper = styled.div`
       display: none;
     }
   `};
-  @media (max-width: 1024px) {
-    padding: 15px;
-  }
-  @media (max-width: 840px) {
-    justify-content: center;
-    .anticon-edit, span {
-      display: none;
-    }
-  }
 `;
 
 export const ConversationHeaderTitleBlock = styled.div`
@@ -309,4 +305,7 @@ export const ConversationActionWrapper = styled.div.attrs({
 export const MessageBoxBlock = styled.div`
   height: 3em;
   width: 100%;
+  @media (max-width: 1024px) {
+    height: 4em;
+  }
 `;

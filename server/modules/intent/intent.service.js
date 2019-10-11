@@ -19,7 +19,7 @@ class IntentService extends BaseService {
     }
     try {
       const { data } = await axios.get(`${WEBHOOK_ENDPOINT}/api/dialogflow/entity/list`);
-      const { entityTypes } = data.data;
+      const { entityTypes = [] } = data.data;
       return entityTypes.map(({ displayName, entities }) => {
         const values = entities.map(({ value }) => value);
         return {

@@ -41,7 +41,6 @@ export const ReviewInputValueWrapper = styled.div`
 `;
 
 export const ReviewInputTitle = styled.div`
-  font-weight: 600;
   padding: .5em;
   flex: 0 0 20%;
   border-right: 1px solid ${props => props.theme.colorStyled.ColorXXXLightGrey};
@@ -50,8 +49,9 @@ export const ReviewInputTitle = styled.div`
 export const ReviewInputValue = styled.div.attrs({
   className: 'review-input-value',
 })`
+  font-weight: 600;
   max-width: 750px;
-  width: ${props => props.isList && '75%'};
+  width: ${props => props.isList && '40%'};
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -76,17 +76,22 @@ export const ReviewInputAction = styled.div`
   padding: .5em;
   margin-left: .1em;
   color: ${props => props.theme.colorStyled.ColorGrey};
-  .review-input-action {
-    font-size: 1.2em;
+  .review-input-action, .comment-icon {
     :hover {
       cursor: pointer;
       color: ${props => props.theme.colorStyled.ColorBgDefault};
     }
   }
+  .comment-icon {
+    font-size: .8em;
+    svg {
+      margin-bottom: -.7em;
+    }
+  }
 `;
 
 export const CommentWrapper = styled.div`
-    padding: .5em 1em;
+  padding: .5em 1em;
   margin-top: .2em;
   flex: 1;
   display: flex;
@@ -102,13 +107,19 @@ export const CommentInput = styled(TextArea)`
 
 export const CommentAction = styled.div`
   flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: .3em;
   button {
-    height: 100%;
     width: 100%;
     min-width: 1em;
     i {
       margin-right: 0;
     }
+  }
+  > i{
+    margin-left: .5em;
+    padding-bottom: .3em;
   }
 `;
 
@@ -123,10 +134,12 @@ export const CommentDisplayWrapper = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   i {
+    font-size: .8em;
     float: left;
     height: 1em;
     width: 1em;
     margin-right: .8em;
+    padding-top: .3em;
     cursor: unset;
   }
   .comment-action {
@@ -147,16 +160,21 @@ export const ListItemWrapper = styled.div`
   span {
     display: flex;
   }
+  :last-of-type {
+    border-bottom: none;
+  }
 `;
 
 export const ListFieldLabel = styled.div`
-  flex: 0 0 30%;
-  font-weight: 600;
+  flex: 0 0 25%;
+  font-weight: 400;
 `;
 
 export const ListFieldValue = styled.div`
-  flex: 0 0 70%;
+  flex: 0 0 75%;
+  padding-left: 1.2em;
   text-overflow: ellipsis;
+  font-weight: 600;
   overflow: hidden;
   .ant-upload-list-item-info {
     span {
@@ -165,5 +183,8 @@ export const ListFieldValue = styled.div`
     img {
       margin-bottom: 0;
     }
+  }
+  .ant-upload-list-item-thumbnail{
+    max-height: 55px;
   }
 `;

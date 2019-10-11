@@ -39,6 +39,7 @@ import ResetPassword from './pages/ResetPassword';
 import EditApplication from './containers/EditApplication/EditApplication';
 import System from './pages/System';
 import ApplicationReview from './containers/ApplicationReview';
+import ChangeRequest from './pages/ChangeRequest';
 
 class Router extends React.PureComponent {
   static propTypes = {
@@ -86,6 +87,7 @@ class Router extends React.PureComponent {
         <UnauthRoute exact path="/application" component={ApplicationForm} />
         <UnauthRoute exact path="/forgot" component={ForgotPassword} />
         <UnauthRoute exact path="/reset-password/:token" component={ResetPassword} />
+        <UnauthRoute exact path="/application-change/:token" component={ChangeRequest} />
         <UnauthRoute
           path="/login/callback/:token/:userId/:email/:verifiedAt"
           component={LoginCallBackPage}

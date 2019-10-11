@@ -27,6 +27,7 @@ const ticketColumns = [
     type: COLUMN_TYPE.TEXT,
     dataKey: 'title',
     columnAttr: {
+      percent: 20,
       value: toI18n('ADMIN_TICKET_TABLE_TITLE'),
       className: 'text-bold ticket-title',
     },
@@ -36,7 +37,7 @@ const ticketColumns = [
     dataKey: 'category',
     columnAttr: {
       value: toI18n('ADMIN_TICKET_TABLE_CATEGORY'),
-      percent: 10,
+      percent: 13,
       className: 'ticket-category',
     },
   },
@@ -45,7 +46,7 @@ const ticketColumns = [
     dataKey: 'owner.username',
     columnAttr: {
       value: toI18n('ADMIN_TICKET_TABLE_OWNER'),
-      percent: 15,
+      percent: 7,
       className: 'ticket-owner',
     },
   },
@@ -54,7 +55,7 @@ const ticketColumns = [
     dataKey: 'assignee.username',
     columnAttr: {
       value: toI18n('ADMIN_TICKET_TABLE_ASSIGNEE'),
-      percent: 15,
+      percent: 10,
       className: 'ticket-assignee',
     },
   },
@@ -64,7 +65,7 @@ const ticketColumns = [
     columnAttr: {
       value: toI18n('ADMIN_TICKET_TABLE_STATUS'),
       textCenter: true,
-      percent: 10,
+      percent: 5,
       className: 'ticket-status',
     },
   },

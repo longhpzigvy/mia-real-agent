@@ -17,6 +17,7 @@ import { ActionBar } from '../../components/CreateTicket/styles';
 import { actions } from '../../reducers/cannedResponse';
 import { reselectAddNewContext, reselectUpdateContext } from '../../selectors/cannedResponse';
 import { NEW_BUTTONS_TYPE } from '../../../common/enums';
+import { ButtonPrimary, ButtonDefault } from '../../stylesheets/Button.style';
 
 const initialValues = {
   shortcut: '',
@@ -136,13 +137,13 @@ class CannedResponseManagement extends React.PureComponent {
 
                   <Row gutter={32}>
                     <ActionBar>
-                      <DefaultButton type="button" cancel onClick={this.handleCloseModal}>
+                      <ButtonDefault type="button" cancel onClick={this.handleCloseModal}>
                         {toI18n('CANCEL')}
-                      </DefaultButton>
-                      
-                      <DefaultButton type="submit" loading={isProgresing} disabled={isProgresing} onClick={handleSubmit}>
+                      </ButtonDefault>
+
+                      <ButtonPrimary type="submit" loading={isProgresing} disabled={isProgresing} onClick={handleSubmit}>
                         {toI18n(isUpdate ? 'CANNED_RESPONSE_FORM_UPDATE_BTN' : 'CANNED_RESPONSE_FORM_CREATE_BTN')}
-                      </DefaultButton>
+                      </ButtonPrimary>
                     </ActionBar>
                   </Row>
                 </Form>
