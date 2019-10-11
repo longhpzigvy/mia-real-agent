@@ -86,3 +86,5 @@ typings/
 build/
 
 build_server/
+
+.idea/

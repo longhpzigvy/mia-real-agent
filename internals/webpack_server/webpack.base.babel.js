@@ -5,6 +5,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
+const CopyPlugin = require('copy-webpack-plugin');
 
 // Remove this line once the following warning goes away (it was meant for webpack loader authors not users):
 // 'DeprecationWarning: loaderUtils.parseQuery() received a non-string value which can be problematic,
@@ -51,6 +52,12 @@ module.exports = options => ({
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       REACT_APP_STRIPE_KEY: JSON.stringify(process.env.REACT_APP_STRIPE_KEY),
     }),
+    new CopyPlugin([
+      {
+        from: 'server/mail-sparkpost/templates',
+        to: 'templates',
+      },
+    ]),
   ]),
 
   resolve: {

@@ -1,7 +1,6 @@
 // Important modules this config uses
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = require('./webpack.base.babel')({
   mode: 'production',
@@ -44,11 +43,5 @@ module.exports = require('./webpack.base.babel')({
   },
 
   plugins: [
-    new CopyPlugin([
-      {
-        from: 'server/mail/templates',
-        to: 'templates',
-      },
-    ]),
   ],
 });

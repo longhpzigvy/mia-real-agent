@@ -4,7 +4,6 @@
 
 const path = require('path');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = require('./webpack.base.babel')({
   mode: 'development',
@@ -25,9 +24,6 @@ module.exports = require('./webpack.base.babel')({
       exclude: /a\.js|node_modules/, // exclude node_modules
       failOnError: false, // show a warning when there is a circular dependency
     }),
-    new CopyPlugin([
-      { from: 'server/mail/templates', to: 'templates' },
-    ]),
   ],
 
   // Emit a source map for easier debugging
