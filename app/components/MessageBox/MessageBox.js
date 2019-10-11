@@ -8,14 +8,12 @@ import history from 'utils/history';
 import { Formik } from 'formik';
 import { Return } from 'components/Generals/General.styled';
 import CreatTicketFormContainer from 'containers/Chatbot/CreateTicket';
-import ShadowScrollbars from 'components/Scrollbar';
 import {
   MessageBoxWrapper,
   MessageBoxContent,
   MessageBoxItem,
   ConversationHeaderTitle,
   MessageInput,
-  MessageEmpty,
   InputAction,
   ConversationTitle,
   RatingWrapper,
@@ -29,32 +27,24 @@ import {
   ConversationHeaderTitleBlock,
   MessageInputContent,
   ConversationActionWrapper,
-  MessageBoxBlock,
 } from './styles';
 import LoadingSpin from '../Loading';
 import ConversationDetail from '../ConversationDetail/ConversationDetail';
 import {
-  REPLY_TYPE, CLOSED_TICKET_STATUSES,
-  TICKET_STATUS, BOT_AVATAR,
+  CLOSED_TICKET_STATUSES,
+  BOT_AVATAR,
 } from '../../../common/enums';
 import FormInput from '../FormInput/FormInput';
 import {
-  shouldShowSystemMessage, isAgent, toI18n, combineChat,
+  isAgent, toI18n,
 } from '../../utils/func-utils';
-import {
-  userChat, otherChat, otherTyping, botChat,
-  ticketStatus, userAction, ticketRating,
-} from '../ChatItem';
+
 import { ButtonPrimary, ButtonDefault } from '../../stylesheets/Button.style';
 import CreateFeedbackForm from '../../containers/CreateFeedbackForm';
 import CloseTicketModal from './CloseTicketModal';
 import { ProfileImageStyled } from '../ChatItem/styles';
 import MessageInputForm from './MessageInputForm';
-
-const scrollStyle = {
-  flex: 'auto',
-  width: '100%',
-};
+import MessageListContainer from '../../containers/MessageBox/MessageList';
 
 const initialRating = {
   score: 1,
@@ -62,21 +52,13 @@ const initialRating = {
 };
 
 export default class MessageBox extends Component {
-  messagesEndRef = React.createRef();
-
   static propTypes = {
     cannedResponses: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    userId: PropTypes.string.isRequired,
     conversationId: PropTypes.string,
-    systemMessage: PropTypes.object,
     currentConversation: PropTypes.object,
     currentTicket: PropTypes.object,
     isFetchingReplies: PropTypes.bool,
-    solutionFound: PropTypes.bool,
     isFindingAgent: PropTypes.bool,
-    replyMessages: PropTypes.arrayOf(PropTypes.shape()),
-    sendingMessages: PropTypes.arrayOf(PropTypes.shape()),
-    otherUserTyping: PropTypes.object,
     fetchCannedResponseForUser: PropTypes.func.isRequired,
     findAgentRequest: PropTypes.func.isRequired,
     sendReplyMessage: PropTypes.func.isRequired,
@@ -95,17 +77,13 @@ export default class MessageBox extends Component {
     currentTicket: {},
     isFetchingReplies: false,
     isFindingAgent: false,
-    replyMessages: [],
     conversationId: '',
-    sendingMessages: [],
-    // sendingMessageErrors: {},
   }
 
   state = {
     feedbackFormIsOpen: false,
     closeTicketModalIsOpen: false,
     isOpenCreateModal: false,
-    otherProfile: null,
   }
 
   toggleFeedbackForm = (toggle) => {
@@ -121,7 +99,7 @@ export default class MessageBox extends Component {
 
   componentDidUpdate = (prevProps) => {
     const {
-      conversationId, replyMessages, otherUserTyping,
+      conversationId,
       currentConversation, setCurrentTicket, joinConversation, leftConversation,
     } = this.props;
     const { conversationId: prevConversationId } = prevProps;
@@ -138,10 +116,6 @@ export default class MessageBox extends Component {
       if (prevConversationId) {
         leftConversation(prevConversationId);
       }
-      return;
-    }
-    if (prevProps.replyMessages.length !== replyMessages.length) {
-      this.scrollChatToBottom();
     }
   }
 
@@ -166,71 +140,11 @@ export default class MessageBox extends Component {
     </MessageBoxItem>
   )
 
-  renderOtherUserMessageContent = (msgId, contents, from) => otherChat(msgId, contents, from.profile);
-
-  renderOtherUserTypingContent = () => {
-    const { otherProfile } = this.state;
-    const { otherUserTyping, conversationId } = this.props;
-    const { conversationId: _id, messages = '' } = otherUserTyping || {};
-    if (!_isEmpty(otherUserTyping)
-      && _id === conversationId
-      && !_isEmpty(messages.trim())
-    ) {
-      this.scrollChatToBottom();
-      return otherTyping(messages, otherProfile);
-    }
-    return false;
-  }
-
-  renderMessageContent = () => {
-    const { otherProfile } = this.state;
-    const {
-      replyMessages, userId, userRole,
-    } = this.props;
-    const refinedMessages = combineChat(replyMessages);
-    return [refinedMessages.map(({
-      from, _id: msgId, contents, type, params, sentAt,
-    }) => {
-      const id = `message[${msgId}]`;
-      switch (type) {
-        case REPLY_TYPE.TICKET_STATUS:
-          return ticketStatus(id, params, sentAt);
-        case REPLY_TYPE.USER_ACTION:
-          return userAction(id, from, params, sentAt);
-        case REPLY_TYPE.BOT_RESPONSE:
-          return botChat(id, contents);
-        case REPLY_TYPE.RATING_ACTION:
-          return ticketRating(id, from, params, sentAt);
-        case REPLY_TYPE.USER_NORMAL:
-          if (from._id === userId) {
-            return userChat(id, contents, false, isAgent(userRole));
-          }
-          if (!otherProfile) {
-            this.setState({
-              otherProfile: from.profile,
-            });
-          }
-          return this.renderOtherUserMessageContent(id, contents, from);
-        default: return null;
-      }
-    }),
-    this.renderOtherUserTypingContent(),
-    ];
-  }
-
-  renderPendingMessageContent = () => {
-    const { sendingMessages } = this.props;
-    if (!sendingMessages || !sendingMessages.length) return null;
-
-    return combineChat(sendingMessages).map(({ id: msgId, contents }) => userChat(msgId, contents, true));
-  }
-
   handleChatSubmit = (content) => {
     const {
       sendReplyMessage, conversationId, userTyping, userRole,
     } = this.props;
     sendReplyMessage(conversationId, content);
-    this.scrollChatToBottom();
     if (!isAgent(userRole)) {
       userTyping(conversationId, '');
     }
@@ -321,12 +235,6 @@ export default class MessageBox extends Component {
     );
   }
 
-  scrollChatToBottom() {
-    const { current } = this.messagesEndRef;
-    if (current) {
-      current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
 
   handleSubmitRating = (values) => {
     const { submitRating, currentTicket } = this.props;
@@ -380,49 +288,6 @@ export default class MessageBox extends Component {
     return this.renderMessageInput();
   }
 
-  renderMessageBoxContent = () => {
-    const {
-      otherUserTyping,
-      replyMessages, currentTicket, systemMessage,
-      conversationId, solutionFound, userRole,
-    } = this.props;
-    const hasChatData = !_isEmpty(replyMessages)
-      || shouldShowSystemMessage(systemMessage, conversationId)
-      || !_isEmpty(otherUserTyping);
-    const { assignee, status, rating } = currentTicket || {};
-    return (
-      <>
-        <ShadowScrollbars
-          autoHide
-          style={scrollStyle}
-        >
-          {!hasChatData
-            ? <MessageEmpty>{toI18n('CONV_MESSAGE_BOX_NO_CHAT_DATA')}</MessageEmpty>
-            : this.renderMessageContent()
-          }
-          {solutionFound
-            && status === TICKET_STATUS.OPEN
-            && !isAgent(userRole)
-            && _isEmpty(assignee)
-            && this.renderFindAgentForSolution()}
-          {this.renderPendingMessageContent()}
-          <MessageBoxBlock />
-          {CLOSED_TICKET_STATUSES.includes(status) && !rating
-            && [
-              (<MessageBoxBlock />),
-              (<MessageBoxBlock />),
-              (<MessageBoxBlock />),
-            ]
-          }
-          <div ref={this.messagesEndRef} />
-        </ShadowScrollbars>
-        <MessageInputContent>
-          {this.renderMessageBoxFooter()}
-        </MessageInputContent>
-      </>
-    );
-  }
-
   handleCloseTicket = ({ status, unsolvedReason }) => {
     const { closeTicket, currentTicket } = this.props;
     const { _id } = currentTicket || {};
@@ -454,7 +319,10 @@ export default class MessageBox extends Component {
         {this.renderMessageHeader()}
         <MessageBoxWrapper>
           <MessageBoxContent>
-            {this.renderMessageBoxContent()}
+            <MessageListContainer />
+            <MessageInputContent>
+              {this.renderMessageBoxFooter()}
+            </MessageInputContent>
           </MessageBoxContent>
           <ConversationDetail ticket={currentTicket} userRole={userRole} />
           <CreateFeedbackForm
